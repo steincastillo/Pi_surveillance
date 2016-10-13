@@ -1,0 +1,18 @@
+{
+    "send_email": false,
+    "keep_log": true,
+    "show_video": true,
+    "ghost_video": false,
+    "camera_warmup_time": 2.0,
+    "camera_resolution": [640, 480],
+    "camera_rotation": 180,
+    "camera_fps": 16,
+    "delta_thresh": 5,
+    "min_area": 5000,
+    "min_upload_seconds": 3,
+    "min_motion_frames": 8,
+    "fromaddr" : "user@gmail.com",  
+    "smtppass" : "password",          
+    "toaddr" : "recipient@addres.domain",
+    "window_title": "Video Feed - [location]"
+}
