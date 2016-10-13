@@ -8,6 +8,7 @@ Date created: 08-Oct-2016
 Version: 1.4
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
+Based on the origial work of: Adrian Rosebrock @ www.pyimagesearch.com
 
 USAGE: python3 pi_surveillance.py --conf [file.json]
 """
