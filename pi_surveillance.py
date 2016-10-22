@@ -2,6 +2,16 @@
 # -*- coding: utf-8 -*-
 #  
 
+"""
+pi_surveillance.py
+Date created: 08-Oct-2016
+Version: 1.8
+Author: Stein Castillo
+Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
+
+USAGE: python3 pi_surveillance.py --conf [file.json]
+"""
+
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are
 #  met:
@@ -28,16 +38,6 @@
 #  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 #  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #  
-
-"""
-pi_surveillance.py
-Date created: 08-Oct-2016
-Version: 1.8
-Author: Stein Castillo
-Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
-
-USAGE: python3 pi_surveillance.py --conf [file.json]
-"""
 
 #############
 # Libraries #
@@ -67,7 +67,7 @@ from email import encoders
 # Functions #
 #############
 
-#send_mail sends and email and attaches a picture when motion is detected
+#send_mail sends and email and attaches a file when required
 def send_email(subj="Motion Detected!", filename="detection.jpg", body="Motion detected!!! @"):
     #prepare the email
     msg = MIMEMultipart()
@@ -174,6 +174,11 @@ def get_cpu_load():
     cpuload= open("/proc/loadavg","r").readline().split(" ")[:3]
     return cpuload 
     
+def get_memory():
+    meminfo = dict((i.split()[0].rstrip(":"), int(i.split()[1])) for i in open ("/proc/meminfo").readlines())
+    return meminfo["MemAvailable"]
+    
+    
 #######################
 # SENSE HAT Functions #
 #######################
@@ -237,8 +242,8 @@ TOADDR = conf["toaddr"]      #email recipient
 
 
 #log file settings
-#LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H:%M:%S")+".csv"
-LOGNAME ="test.csv"
+LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
+#LOGNAME ="test.csv"
 
 ##############
 # Initialize #
@@ -437,61 +442,71 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         cv.imshow("Frame Delta", frameDelta)
         
     #check if system check is required
-    if (timestamp - lastsyscheck).seconds >= conf["sys_check_seconds"]:
-        msg_out("I", "System check...")
-        if conf["keep_log"]: write_log("[INFO]", "System check")
-        lastsyscheck = timestamp
-        cmd = sys_check()
-        
-        if cmd == "SP":     #send picture
-            msg_out("C", "Send picture command received!")
-            if conf["keep_log"]: write_log("[CMD]", "Send picture command received!")
-            msg_out("I", "Saving frame...")
-            cv.imwrite("request.jpg", frame)
-            msg_out("I", "Sending picture...")
-            send_email("Requested Image", "request.jpg", "Sending requested image @")
+    if conf["sys_check_seconds"]>0:
+        if (timestamp - lastsyscheck).seconds >= conf["sys_check_seconds"]:
+            msg_out("I", "System check...")
+            if conf["keep_log"]: write_log("[INFO]", "System check")
+            lastsyscheck = timestamp
+            cmd = sys_check()
             
-        elif cmd == "SI":     #send ping
-            msg_out("C", "Send ping command received!")
-            if conf["keep_log"]: write_log("[CMD]", "Send ping command received!")
-            send_email("Requested Ping", None, "System up and running! @")
-            
-        elif cmd == "SS":     #send system
-            msg_out("C", "Send system command received!")
-            if conf["keep_log"]: write_log("[CMD]", "Send system command received!")
-            cpu_load = get_cpu_load()
-            cpu_uptime = get_cpu_uptime()
-            #prepare system information file
-            header = []
-            header.append("Time")
-            header.append("Parm")
-            header.append("Value")
-            with open("sysinfo.csv", "w") as f:
-                f.write(",".join(str(value) for value in header) + "\n")
-            f = open ("sysinfo.csv", "a")
-            time_s = datetime.datetime.now().strftime("%H:%M:%S")
-            line = time_s+","+"uptime"+","+cpu_uptime+"\n"
-            f.write(line)
-            line = time_s+","+"CPU Load [1]"+","+cpu_load[0]+"\n"
-            f.write(line)
-            line = time_s+","+"CPU Load [5]"+","+cpu_load[1]+"\n"
-            f.write(line)
-            line = time_s+","+"CPU Load [15]"+","+cpu_load[2]+"\n"
-            f.write(line)
-            f.flush()
-            f.close
-            #send the email
-            msg_out("I", "Sending system info")
-            send_email("Requested sys info", "sysinfo.csv", "Requested system information")
-            
-        elif cmd == "SL":  #send log
-            msg_out("C", "Send log command received!")
-            if conf["keep_log"]: 
-                write_log("[CMD]", "Send log command received!")
-                msg_out("I", "Sending log...")
-                send_email("Requested log file", LOGNAME, "Sending requested activity log @")
-            else: 
-                send_email("Requested log file", None, "Log keeping option off!")
+            if cmd == "SP":     #send picture
+                msg_out("C", "Send picture command received!")
+                if conf["keep_log"]: write_log("[CMD]", "Send picture command received!")
+                msg_out("I", "Saving frame...")
+                cv.imwrite("request.jpg", frame)
+                msg_out("I", "Sending picture...")
+                send_email("Requested Image", "request.jpg", "Sending requested image @")
+                
+            elif cmd == "SI":     #send ping
+                msg_out("C", "Send ping command received!")
+                if conf["keep_log"]: write_log("[CMD]", "Send ping command received!")
+                send_email("Requested Ping", None, "System up and running! @")
+                
+            elif cmd == "SS":     #send system
+                msg_out("C", "Send system command received!")
+                if conf["keep_log"]: write_log("[CMD]", "Send system command received!")
+                cpu_load = get_cpu_load()
+                cpu_uptime = get_cpu_uptime()
+                mem_ava = get_memory()
+                #prepare system information file
+                f1 = open ("sysinfo.csv", "w")
+                line ="Time"+","+"Parm"+","+"Value"+"\n"
+                f1.write(line)
+                time_s = datetime.datetime.now().strftime("%H:%M:%S")
+                line = time_s+","+"uptime"+","+cpu_uptime+"\n"
+                f1.write(line)
+                line = time_s+","+"CPU Load [1]"+","+cpu_load[0]+"\n"
+                f1.write(line)
+                line = time_s+","+"CPU Load [5]"+","+cpu_load[1]+"\n"
+                f1.write(line)
+                line = time_s+","+"CPU Load [15]"+","+cpu_load[2]+"\n"
+                f1.write(line)
+                line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
+                f1.write(line)
+                f1.flush()
+                f1.close
+                #send the email
+                msg_out("I", "Sending system info")
+                send_email("Requested sys info", "sysinfo.csv", "Requested system information")
+            elif cmd == "RL":     #reset log
+                msg_out("C", "Reset log command received!")
+                if conf["keep_log"]:
+                    msg_out("I", "Deleting old log file")
+                    os.remove(LOGNAME)
+                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
+                    #LOGNAME ="test.csv"
+                    log_setup(LOGNAME)
+                    msg_out("I", "Log file created...")
+                    write_log("[CMD]", "Log file reset")
+                
+            elif cmd == "SL":  #send log
+                msg_out("C", "Send log command received!")
+                if conf["keep_log"]: 
+                    write_log("[CMD]", "Send log command received!")
+                    msg_out("I", "Sending log...")
+                    send_email("Requested log file", LOGNAME, "Sending requested activity log @")
+                else: 
+                    send_email("Requested log file", None, "Log keeping option off!")
             
         
     key = cv.waitKey(1) & 0xFF
