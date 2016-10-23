@@ -5,7 +5,7 @@
 """
 pi_surveillance.py
 Date created: 08-Oct-2016
-Version: 1.8
+Version: 2.0
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
 
@@ -253,31 +253,32 @@ LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S
 # Initialize #
 ##############
 
-print("\n")
-print("**************************************")
-print("*          PI Surveillance           *")
-print("*                                    *")
-print("*           Version: 1.8             *")
-print("**************************************")
-print("\n")
-print ("[INFO] Press [q] to quit")
-print("\n")
-print("Surveillance settings:")
-print("**********************")
-print ("  * Video feed: " + str(conf["show_video"]))
-print ("  * Delta Video: " + str(conf["ghost_video"]))
-print ("  * eMail: " + str(conf["send_email"]))
-print ("  * log file: " + str(conf["keep_log"]))
-print("**********************")
-print ("  * Resolution: " + str(conf["camera_resolution"]))
-print ("  * FPS : " + str(conf["camera_fps"]))
-print ("  * Sensibility: " + str(conf["min_motion_frames"]))
-print ("  * Rotation: " + str(conf["camera_rotation"]))
-print("**********************")
-print ("  * Sys Check: " + str(conf["sys_check_seconds"]))
-print ("  * Echo: " + str(conf["echo"]))
-print ("  * Sense Hat: " + str(conf["sense_hat"]))
-print ("\n")
+if conf["echo"]:
+    print("\n")
+    print("**************************************")
+    print("*          PI Surveillance           *")
+    print("*                                    *")
+    print("*           Version: 2.0             *")
+    print("**************************************")
+    print("\n")
+    print ("[INFO] Press [q] to quit")
+    print("\n")
+    print("Surveillance settings:")
+    print("**********************")
+    print ("  * Video feed: " + str(conf["show_video"]))
+    print ("  * Delta Video: " + str(conf["ghost_video"]))
+    print ("  * eMail: " + str(conf["send_email"]))
+    print ("  * log file: " + str(conf["keep_log"]))
+    print("**********************")
+    print ("  * Resolution: " + str(conf["camera_resolution"]))
+    print ("  * FPS : " + str(conf["camera_fps"]))
+    print ("  * Sensibility: " + str(conf["min_motion_frames"]))
+    print ("  * Rotation: " + str(conf["camera_rotation"]))
+    print("**********************")
+    print ("  * Sys Check: " + str(conf["sys_check_seconds"]))
+    print ("  * Echo: " + str(conf["echo"]))
+    print ("  * Sense Hat: " + str(conf["sense_hat"]))
+    print ("\n")
 
 
 #Initialize log file
