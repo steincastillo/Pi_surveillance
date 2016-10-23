@@ -18,7 +18,7 @@ In order to properly run the Pi_surveillance system you will need:
 * Pi Camera  
 * Sense-hat (optional)  
 
-#####CONF.JSON file
+#####DEFAULT.JSON file
 Clone this repo and edit the conf.json file as follows:  
 `send email:` [true/false] - set to 'true' if you want to receive an email with motion is detected  
 `keep log:` [true/false] - set to 'true' if you want to save the activity on a log file  
@@ -38,8 +38,12 @@ Clone this repo and edit the conf.json file as follows:
 `toaddr`: [email address] to whom the alarms and other information will be sent to  
 `window_title` [title] of the video feed window  
 
+several version of the **default.json** file can be saved for different situations
+
 #####how to launch
 Once you have configure the conf.json file to your needs launch the surveillance system from the command line:
 
-##python3 pi_surveillance.py --conf conf.json
+##python3 pi_surveillance.py --conf default.json
 
+#####Additional credits
+This project was put together largely using the previous work of **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
