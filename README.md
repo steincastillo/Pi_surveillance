@@ -41,7 +41,7 @@ Clone this repo and edit the conf.json file as follows:
 several version of the **default.json** file can be saved for different situations
 
 #####how to launch
-Once you have configure the conf.json file to your needs launch the surveillance system from the command line:
+Once you have configured the default.json file to your needs, launch the surveillance system from the command line:
 
 ##python3 pi_surveillance.py --conf default.json
 
