@@ -3,13 +3,13 @@
 
 #####Overview
 **Pi Surveillance** is a rich-function home surveillance system implemented on a raspberry pi. Main features inclue:  
-*Permanent video monitoring  
-*Motion detection  
-*Enviroment sensing (with optional sense-hat)  
-*Record monitor activity to a log file  
-*Send email messages containing motion alarms (with pictures), system status, etc  
-*Ability to control the monitor remotely over email  
-*Fully configurable
+* Permanent video monitoring  
+* Motion detection  
+* Enviroment sensing (with optional sense-hat)  
+* Record monitor activity to a log file  
+* Send email messages containing motion alarms (with pictures), system status, etc  
+* Ability to control the monitor remotely over email  
+* Fully configurable
 
 #####What do you need
 In order to properly run the Pi_surveillance system you will need:  
@@ -18,7 +18,7 @@ In order to properly run the Pi_surveillance system you will need:
 * Pi Camera  
 * Sense-hat (optional)  
 
-#####CONF.JSON file
+#####DEFAULT.JSON file
 Clone this repo and edit the conf.json file as follows:  
 `send email:` [true/false] - set to 'true' if you want to receive an email with motion is detected  
 `keep log:` [true/false] - set to 'true' if you want to save the activity on a log file  
@@ -33,10 +33,17 @@ Clone this repo and edit the conf.json file as follows:
 `min_area`: [number] of pixels that have to change in the image to sense motion  
 `min_upload_seconds´: [number] of seconds to wait before consecutive uploads  
 `min_motion_frames´: [number] of consecutive frames with motion required to trigger the alarm  
-`fromaddr´: [email address] of your raspberry pi (sender) - Gmail account only!  
+`fromaddr`: [email address] of your raspberry pi (sender) - Gmail account only!  
 `smtpass` : [password] to your raspberry Gmail account  
 `toaddr`: [email address] to whom the alarms and other information will be sent to  
 `window_title` [title] of the video feed window  
 
+several version of the **default.json** file can be saved for different situations
 
+#####how to launch
+Once you have configured the default.json file to your needs, launch the surveillance system from the command line:
 
+##python3 pi_surveillance.py --conf default.json
+
+#####Additional credits
+This project was put together largely using the previous work of **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
