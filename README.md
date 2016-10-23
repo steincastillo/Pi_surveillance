@@ -20,7 +20,7 @@ In order to properly run the Pi_surveillance system you will need:
 
 #####DEFAULT.JSON file
 Clone this repo and edit the conf.json file as follows:  
-`send email:` [true/false] - set to 'true' if you want to receive an email with motion is detected  
+`send email:` [true/false] - set to 'true' if you want to receive an email when motion is detected  
 `keep log:` [true/false] - set to 'true' if you want to save the activity on a log file  
 `ghost video:` [true/false] - set to true if you want to see the motion detection video feed  
 `echo`: [true/false] - set to true if your raspberry is connected to a screen  
@@ -44,6 +44,15 @@ several version of the **default.json** file can be saved for different situatio
 Once you have configured the default.json file to your needs, launch the surveillance system from the command line:
 
 ##python3 pi_surveillance.py --conf default.json
+
+#####Remote control 
+**Pi_surveillance** can be remotely controled. You just need to send a simple email to you raspberry with the command on the subject line.  
+The available commands are:  
+* send picture: Take a picture and send it back  
+* send ping: Send a short text indicating the system is up and running  
+* send log: Send the system log file  
+* send system: Send a file with the current uptime, processor usage and available memory  
+* reset log: Initialize the log file and erase the current file  
 
 #####Additional credits
 This project was put together largely using the previous work of **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
