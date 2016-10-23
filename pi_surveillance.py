@@ -127,7 +127,8 @@ def msg_out(typ = "I", msg = "null"):
     else: mtype = "[UNKNOWN - "
         
     if conf["echo"]: print (mtype + msg_time + "] " + msg)
-    
+ 
+# sys_check scan the system mailbox for remote commands
 def sys_check():
     cmd = "NC"
     try:
@@ -163,6 +164,7 @@ def sys_check():
         finally:
             return cmd
 
+# get_cpu_time obtains the system uptime by reading/parsing the /proc/uptime file
 def  get_cpu_uptime():
     uptime = ""
     with open("/proc/uptime", "r") as f:
@@ -170,10 +172,12 @@ def  get_cpu_uptime():
         uptime = str(timedelta(seconds = uptime_seconds))
     return uptime
     
+# get_cpu_load obtains the processor load by reading/parsing /proc/loadavg
 def get_cpu_load():
     cpuload= open("/proc/loadavg","r").readline().split(" ")[:3]
     return cpuload 
-    
+
+# get_memory obtains the system available memory by reading/parsing the /proc/meminfo file    
 def get_memory():
     meminfo = dict((i.split()[0].rstrip(":"), int(i.split()[1])) for i in open ("/proc/meminfo").readlines())
     return meminfo["MemAvailable"]
