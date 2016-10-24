@@ -289,8 +289,8 @@ if conf["keep_log"]:
 #initialize the Sense Hat
 sense_flag = False
 if conf["sense_hat"]:
-    #from sense_hat import SenseHat #switch when real sense hat is connected
-    from sense_emu import SenseHat
+    from sense_hat import SenseHat #uncomment to use attached sense hat
+    #from sense_emu import SenseHat #uncomment to use sense hat simulator
     import os
     try:
         sense=SenseHat()
