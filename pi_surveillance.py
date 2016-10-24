@@ -99,7 +99,6 @@ def send_email(subj="Motion Detected!", filename="detection.jpg", body="Motion d
 
 # log_setup create the logging file and adds the column titles
 def log_setup(filename):
-    logger = logging.getLogger("Pi_surveillance")
     logger.setLevel(logging.INFO)
     log_file = logging.FileHandler(filename, mode="w")
     log_format = logging.Formatter("%(asctime)s-[%(levelname)s]-%(message)s")
@@ -246,7 +245,7 @@ TOADDR = conf["toaddr"]      #email recipient
 
 
 #log file settings
-LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
+LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 #LOGNAME ="test.csv"
 
 ##############
@@ -283,6 +282,7 @@ if conf["echo"]:
 
 #Initialize log file
 if conf["keep_log"]:
+    logger = logging.getLogger("Pi_surveillance")
     log_setup(LOGNAME)
     msg_out("I", "Log file created...")
     logger.info("Log file created")
@@ -499,7 +499,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 if conf["keep_log"]:
                     msg_out("I", "Deleting old log file")
                     os.remove(LOGNAME)
-                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
+                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
                     #LOGNAME ="test.csv"
                     log_setup(LOGNAME)
                     msg_out("I", "Log file created...")
@@ -530,17 +530,17 @@ if conf["keep_log"]: logger.info("Terminated by the user...")
 
 #log surveillance settings
 if conf["keep_log"]:
-    logger.info ("[SET] Video feed"+str(conf["show_video"]))
-    logger.info("[SET] Delta video"+str(conf["ghost_video"]))
-    logger.info ("[SET] eMail"+str(conf["send_email"]))
-    logger.info ("[SET] Log file"+str(conf["keep_log"]))
-    logger.info ("[SET] Resolution"+str(conf["camera_resolution"]))
-    logger.info ("[SET] FPS"+str(conf["camera_fps"]))
-    logger.info ("[SET] Sensibility"+str(conf["min_motion_frames"]))
-    logger.info ("[SET] Rotation"+str(conf["camera_rotation"]))
-    logger.info ("[SET] Sys check"+str(conf["sys_check_seconds"]))
-    logger.info ("[SET] Echo"+str(conf["echo"]))
-    logger.info ("[SET] Sense hat"+str(conf["sense_hat"]))
+    logger.info ("[SET] Video feed "+str(conf["show_video"]))
+    logger.info("[SET] Delta video "+str(conf["ghost_video"]))
+    logger.info ("[SET] eMail "+str(conf["send_email"]))
+    logger.info ("[SET] Log file "+str(conf["keep_log"]))
+    logger.info ("[SET] Resolution "+str(conf["camera_resolution"]))
+    logger.info ("[SET] FPS "+str(conf["camera_fps"]))
+    logger.info ("[SET] Sensibility "+str(conf["min_motion_frames"]))
+    logger.info ("[SET] Rotation "+str(conf["camera_rotation"]))
+    logger.info ("[SET] Sys check "+str(conf["sys_check_seconds"]))
+    logger.info ("[SET] Echo "+str(conf["echo"]))
+    logger.info ("[SET] Sense hat "+str(conf["sense_hat"]))
 
 camera.close()
 cv.destroyAllWindows()
