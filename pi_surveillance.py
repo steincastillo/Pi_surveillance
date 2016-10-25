@@ -105,15 +105,6 @@ def log_setup(filename):
     log_file.setFormatter(log_format)
     logger.addHandler(log_file)
 
-#write_log appends an activity to the log file
-def write_log(m_type, message):
-    time_s = datetime.datetime.now().strftime("%H:%M:%S")
-    line = m_type+","+time_s+","+message+"\n"
-    f = open (LOGNAME, "a")
-    f.write(line)
-    f.flush()
-    f.close
-
 # msg_out prints a formated message to the console    
 def msg_out(typ = "I", msg = "null"):
     msg_time = datetime.datetime.now().strftime("%I:%M:%S%p")
@@ -217,10 +208,8 @@ def get_sense_data():
         
     return sense_data
 
-
-
 ####################
-#    Settings     #
+#          Settings               #
 ####################
 
 #construct the command line argument parser and parse the arguments
@@ -243,21 +232,19 @@ FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
 TOADDR = conf["toaddr"]      #email recipient
 
-
 #log file settings
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
-#LOGNAME ="test.csv"
 
-##############
-# Initialize #
-##############
+################
+#       Initialize          #
+################
 
 if conf["echo"]:
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance           *")
-    print("*                                    *")
-    print("*           Version: 2.0             *")
+    print("*          PI Surveillance                      *")
+    print("*                                                          *")
+    print("*           Version: 2.0                          *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -329,7 +316,6 @@ else:
 if conf["ghost_video"]:
     cv.namedWindow("Thresh", cv.WINDOW_NORMAL)
     cv.namedWindow("Frame Delta", cv.WINDOW_NORMAL)
-
 
 #############
 # Main loop #
@@ -447,7 +433,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         cv.imshow("Thresh", thresh)
         cv.imshow("Frame Delta", frameDelta)
         
-    #check if system check is required
+    #validate if system check is required
     if conf["sys_check_seconds"]>0:
         if (timestamp - lastsyscheck).seconds >= conf["sys_check_seconds"]:
             msg_out("I", "System check...")
@@ -500,7 +486,6 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     msg_out("I", "Deleting old log file")
                     os.remove(LOGNAME)
                     LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
-                    #LOGNAME ="test.csv"
                     log_setup(LOGNAME)
                     msg_out("I", "Log file created...")
                     logger.warning("Log file reset")
@@ -544,5 +529,4 @@ if conf["keep_log"]:
 
 camera.close()
 cv.destroyAllWindows()
-
 
