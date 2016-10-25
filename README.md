@@ -33,7 +33,7 @@ The available configuration elements are:
 `camera_fps`: [number] of frames per second. typically: 16  
 `delta_thresh`: [number] to set the image threshold adjustment  
 `min_area`: [number] of pixels that have to change in the image to sense motion  
-`min_upload_seconds´: [number] of seconds to wait before consecutive uploads  
+`min_upload_seconds`: [number] of seconds to wait before consecutive uploads  
 `min_motion_frames´: [number] of consecutive frames with motion required to trigger the alarm  
 `fromaddr`: [email address] of your raspberry pi (sender) - Gmail account only!  
 `smtpass` : [password] to your raspberry Gmail account  
