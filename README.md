@@ -27,7 +27,7 @@ The available configuration elements are:
 `ghost video:` [true/false] - set to true if you want to see the motion detection video feed  
 `echo`: [true/false] - set to true if your raspberry is connected to a screen  
 `sys_check_seconds`: [number] of seconds to wait to check if a remote comand has been sent via email typically: 600  
-`sense_hat`: [true/false] -  set to 'true' if you have a sense-hat attached and want to get temperature/pressure/humidity readings  
+`sense_hat`: [true/false] -  set to 'true' if sense-hat attached and want to get temperature/pressure/humidity readings  
 `camera_warmup_time`: [number] of seconds the camera needs to adjust focus, exposure, etc.  
 `camera_resolution`: [number, number] to set the picture resolution  
 `camera_fps`: [number] of frames per second. typically: 16  
@@ -56,5 +56,5 @@ Once you have configured the default.json file to your needs, launch the surveil
 
 ####python3 pi_surveillance.py --conf default.json
 
-#####Additional credits
+###Additional credits
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
