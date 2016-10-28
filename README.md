@@ -13,7 +13,7 @@
 
 ###What do you need
 In order to properly run the Pi_surveillance system you will need:  
-* Raspberry Pi (B+ or higher) running and updated version of raspbian (PIXEL)  
+* Raspberry Pi (2 or higher) running and updated version of raspbian (PIXEL)  
 * OpenCV properly configured   
 * Pi Camera  
 * Sense-hat (optional)  
