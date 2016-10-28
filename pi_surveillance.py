@@ -126,8 +126,8 @@ def sys_check():
         result = mbox.login(FROMADDR, SMTPPASS)
         mbox.select()
         
-        #emfilter= "\'(FROM "+"\""+TOADDR+"\")\'"
-        result, data = mbox.uid("search", None, '(FROM "stein@americamail.com")')
+        emfilter= "\'(FROM \"{}\")\'".format(TOADDR)
+        result, data = mbox.uid("search", None,emfilter)
         latest = data[0].split()[-1]
        
         result, data = mbox.uid("fetch", latest, "(RFC822)")
