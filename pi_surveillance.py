@@ -50,6 +50,7 @@ from datetime import timedelta
 import argparse
 import warnings
 import datetime
+import logging
 import imutils
 import json
 import time
@@ -98,22 +99,11 @@ def send_email(subj="Motion Detected!", filename="detection.jpg", body="Motion d
 
 # log_setup create the logging file and adds the column titles
 def log_setup(filename):
-    header = []
-    header.append("Type")
-    header.append("Time")
-    header.append("Message")
-    
-    with open(filename, "w") as f:
-        f.write(",".join(str(value) for value in header) + "\n")
-
-#write_log appends an activity to the log file
-def write_log(m_type, message):
-    time_s = datetime.datetime.now().strftime("%H:%M:%S")
-    line = m_type+","+time_s+","+message+"\n"
-    f = open (LOGNAME, "a")
-    f.write(line)
-    f.flush()
-    f.close
+    logger.setLevel(logging.INFO)
+    log_file = logging.FileHandler(filename, mode="w")
+    log_format = logging.Formatter("%(asctime)s-[%(levelname)s]-%(message)s")
+    log_file.setFormatter(log_format)
+    logger.addHandler(log_file)
 
 # msg_out prints a formated message to the console    
 def msg_out(typ = "I", msg = "null"):
@@ -218,10 +208,8 @@ def get_sense_data():
         
     return sense_data
 
-
-
 ####################
-#    Settings     #
+#          Settings               #
 ####################
 
 #construct the command line argument parser and parse the arguments
@@ -244,21 +232,19 @@ FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
 TOADDR = conf["toaddr"]      #email recipient
 
-
 #log file settings
-LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
-#LOGNAME ="test.csv"
+LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
-##############
-# Initialize #
-##############
+################
+#       Initialize          #
+################
 
 if conf["echo"]:
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance           *")
-    print("*                                    *")
-    print("*           Version: 2.0             *")
+    print("*          PI Surveillance                      *")
+    print("*                                                          *")
+    print("*           Version: 2.0                          *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -283,8 +269,10 @@ if conf["echo"]:
 
 #Initialize log file
 if conf["keep_log"]:
+    logger = logging.getLogger("Pi_surveillance")
     log_setup(LOGNAME)
     msg_out("I", "Log file created...")
+    logger.info("Log file created")
 
 #initialize the Sense Hat
 sense_flag = False
@@ -296,15 +284,15 @@ if conf["sense_hat"]:
         sense=SenseHat()
         msg_out("I", "Sense Hat detected...")
         sense_flag = True
-        if conf["keep_log"]: write_log("[INFO]", "Sense Hat detected...")
+        if conf["keep_log"]: logger.info("Sense Hat detected...")
         sense.show_message("Sensing: ON", scroll_speed=0.05)
     except:
         msg_out("E", "Sense Hat NOT detected...")
         sense_flag = False
-        if conf["keep_log"]: write_log("[ERROR]", "Sense hat NOT detected...")
+        if conf["keep_log"]: logger.error("Sense hat NOT detected...")
 
 msg_out("I", "Initializing camera...")
-if conf["keep_log"]: write_log("[INFO]", "Initializing camera...")
+if conf["keep_log"]: logger.info("Initializing camera...")
 avg = None
 lastUploaded = datetime.datetime.now()
 lastsyscheck = datetime.datetime.now()
@@ -322,13 +310,12 @@ else:
     f_static = img_static.array
     cv.imshow("STATIC IMAGE", f_static)
     msg_out("I", "Static image initiated")
-    if conf["keep_log"]: write_log("[INFO]", "Static image initiated...")
+    if conf["keep_log"]: logger.info("Static image initiated...")
 
 #if required, display delta and threshold video    
 if conf["ghost_video"]:
     cv.namedWindow("Thresh", cv.WINDOW_NORMAL)
     cv.namedWindow("Frame Delta", cv.WINDOW_NORMAL)
-
 
 #############
 # Main loop #
@@ -350,11 +337,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     #if the average frame is None, initialize it
     if avg is None:
         msg_out("I", "Starting background model...")
-        if conf["keep_log"]: write_log("[INFO]", "Starting background model...")
+        if conf["keep_log"]: logger.info("Starting background model...")
         avg = gray.copy().astype("float")
         rawCapture.truncate(0)
         msg_out("I", "System initiated...")
-        if conf["keep_log"]: write_log("[INFO]", "System initiated...")
+        if conf["keep_log"]: logger.info("System initiated...")
         continue
         
     #accumulate the weighted average between the current frame and
@@ -423,7 +410,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             #high enough
             if motionCounter >= conf["min_motion_frames"]:
                 msg_out("A", "Motion detected!!!")
-                if conf["keep_log"]: write_log("[ALARM]", "Motion detected!!!")
+                if conf["keep_log"]: logger.critical("Motion detected!!!")
                 
                 if conf["send_email"]:
                     #save the frame
@@ -446,17 +433,17 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         cv.imshow("Thresh", thresh)
         cv.imshow("Frame Delta", frameDelta)
         
-    #check if system check is required
+    #validate if system check is required
     if conf["sys_check_seconds"]>0:
         if (timestamp - lastsyscheck).seconds >= conf["sys_check_seconds"]:
             msg_out("I", "System check...")
-            if conf["keep_log"]: write_log("[INFO]", "System check")
+            if conf["keep_log"]: logger.info("System check")
             lastsyscheck = timestamp
             cmd = sys_check()
             
             if cmd == "SP":     #send picture
                 msg_out("C", "Send picture command received!")
-                if conf["keep_log"]: write_log("[CMD]", "Send picture command received!")
+                if conf["keep_log"]: logger.warning("Send picture command received!")
                 msg_out("I", "Saving frame...")
                 cv.imwrite("request.jpg", frame)
                 msg_out("I", "Sending picture...")
@@ -464,12 +451,12 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 
             elif cmd == "SI":     #send ping
                 msg_out("C", "Send ping command received!")
-                if conf["keep_log"]: write_log("[CMD]", "Send ping command received!")
+                if conf["keep_log"]: logger.warning("Send ping command received!")
                 send_email("Requested Ping", None, "System up and running! @")
                 
             elif cmd == "SS":     #send system
                 msg_out("C", "Send system command received!")
-                if conf["keep_log"]: write_log("[CMD]", "Send system command received!")
+                if conf["keep_log"]: logger.warning("Send system command received!")
                 cpu_load = get_cpu_load()
                 cpu_uptime = get_cpu_uptime()
                 mem_ava = get_memory()
@@ -498,16 +485,15 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 if conf["keep_log"]:
                     msg_out("I", "Deleting old log file")
                     os.remove(LOGNAME)
-                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".csv"
-                    #LOGNAME ="test.csv"
+                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
                     log_setup(LOGNAME)
                     msg_out("I", "Log file created...")
-                    write_log("[CMD]", "Log file reset")
+                    logger.warning("Log file reset")
                 
             elif cmd == "SL":  #send log
                 msg_out("C", "Send log command received!")
                 if conf["keep_log"]: 
-                    write_log("[CMD]", "Send log command received!")
+                    logger.warning("Send log command received!")
                     msg_out("I", "Sending log...")
                     send_email("Requested log file", LOGNAME, "Sending requested activity log @")
                 else: 
@@ -525,23 +511,22 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             
 #cleanup the camera and close any open windows
 msg_out("I", "Terminated by the user...")
-if conf["keep_log"]: write_log("[INFO]", "Terminated by the user...")
+if conf["keep_log"]: logger.info("Terminated by the user...")
 
 #log surveillance settings
 if conf["keep_log"]:
-    write_log("[SET] Video feed", str(conf["show_video"]))
-    write_log("[SET] Delta video", str(conf["ghost_video"]))
-    write_log("[SET] eMail", str(conf["send_email"]))
-    write_log("[SET] Log file", str(conf["keep_log"]))
-    write_log("[SET] Resolution", str(conf["camera_resolution"]))
-    write_log("[SET] FPS", str(conf["camera_fps"]))
-    write_log("[SET] Sensibility", str(conf["min_motion_frames"]))
-    write_log("[SET] Rotation", str(conf["camera_rotation"]))
-    write_log("[SET] Sys check", str(conf["sys_check_seconds"]))
-    write_log("[SET] Echo", str(conf["echo"]))
-    write_log("[SET] Sense hat", str(conf["sense_hat"]))
+    logger.info ("[SET] Video feed: "+str(conf["show_video"]))
+    logger.info("[SET] Delta video: "+str(conf["ghost_video"]))
+    logger.info ("[SET] eMail: "+str(conf["send_email"]))
+    logger.info ("[SET] Log file: "+str(conf["keep_log"]))
+    logger.info ("[SET] Resolution: "+str(conf["camera_resolution"]))
+    logger.info ("[SET] FPS: "+str(conf["camera_fps"]))
+    logger.info ("[SET] Sensibility: "+str(conf["min_motion_frames"]))
+    logger.info ("[SET] Rotation: "+str(conf["camera_rotation"]))
+    logger.info ("[SET] Sys check: "+str(conf["sys_check_seconds"]))
+    logger.info ("[SET] Echo: "+str(conf["echo"]))
+    logger.info ("[SET] Sense hat: "+str(conf["sense_hat"]))
 
 camera.close()
 cv.destroyAllWindows()
-
 
