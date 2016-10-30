@@ -208,9 +208,9 @@ def get_sense_data():
         
     return sense_data
 
-####################
-#          Settings               #
-####################
+###########################
+#          Settings       #
+###########################
 
 #construct the command line argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -220,13 +220,6 @@ args = vars(ap.parse_args())
 warnings.filterwarnings("ignore")
 conf = json.load(open(args["conf"]))
 
-#camera settings
-camera = PiCamera()
-camera.rotation = conf["camera_rotation"]
-camera.resolution = tuple(conf["camera_resolution"])
-camera.framerate = conf["camera_fps"]
-rawCapture = PiRGBArray(camera, size=tuple(conf["camera_resolution"]))
-
 #emailing parameters settings
 FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
@@ -235,16 +228,17 @@ TOADDR = conf["toaddr"]      #email recipient
 #log file settings
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
-################
-#       Initialize          #
-################
+########################
+#       Initialize     #
+########################
 
+#initialize console
 if conf["echo"]:
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance                      *")
-    print("*                                                          *")
-    print("*           Version: 2.0                          *")
+    print("*          PI Surveillance           *")
+    print("*                                    *")
+    print("*           Version: 2.0             *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -291,12 +285,18 @@ if conf["sense_hat"]:
         sense_flag = False
         if conf["keep_log"]: logger.error("Sense hat NOT detected...")
 
+#initialize camera
 msg_out("I", "Initializing camera...")
 if conf["keep_log"]: logger.info("Initializing camera...")
 avg = None
 lastUploaded = datetime.datetime.now()
 lastsyscheck = datetime.datetime.now()
 motionCounter = 0 
+camera = PiCamera()
+camera.rotation = conf["camera_rotation"]
+camera.resolution = tuple(conf["camera_resolution"])
+camera.framerate = conf["camera_fps"]
+rawCapture = PiRGBArray(camera, size=tuple(conf["camera_resolution"]))
 time.sleep(conf["camera_warmup_time"])
 
 #if required, create windows for live video feed
