@@ -260,15 +260,14 @@ if conf["echo"]:
     print ("  * Sense Hat: " + str(conf["sense_hat"]))
     print ("\n")
 
-
-#Initialize log file
+#Initialize LOG FILE
 if conf["keep_log"]:
     logger = logging.getLogger("Pi_surveillance")
     log_setup(LOGNAME)
     msg_out("I", "Log file created...")
     logger.info("Log file created")
 
-#initialize the Sense Hat
+#initialize the SENSE HAT
 sense_flag = False
 if conf["sense_hat"]:
     from sense_hat import SenseHat #uncomment to use attached sense hat
@@ -285,7 +284,7 @@ if conf["sense_hat"]:
         sense_flag = False
         if conf["keep_log"]: logger.error("Sense hat NOT detected...")
 
-#initialize camera
+#initialize CAMERA
 msg_out("I", "Initializing camera...")
 if conf["keep_log"]: logger.info("Initializing camera...")
 avg = None
@@ -312,7 +311,7 @@ else:
     msg_out("I", "Static image initiated")
     if conf["keep_log"]: logger.info("Static image initiated...")
 
-#if required, display delta and threshold video    
+#if required, display delta and thresholded video    
 if conf["ghost_video"]:
     cv.namedWindow("Thresh", cv.WINDOW_NORMAL)
     cv.namedWindow("Frame Delta", cv.WINDOW_NORMAL)
@@ -347,7 +346,6 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     #accumulate the weighted average between the current frame and
     #previous frames, then compute the difference between the current
     #fram and running average
-    
     cv.accumulateWeighted(gray, avg, 0.5)
     frameDelta = cv.absdiff(gray, cv.convertScaleAbs(avg))
     
@@ -499,7 +497,6 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 else: 
                     send_email("Requested log file", None, "Log keeping option off!")
             
-        
     key = cv.waitKey(1) & 0xFF
         
     #if the "q" key is pressed, break from the loop
