@@ -329,7 +329,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     text = "Empty"
     
     #resize the frame, convert it to grayscal and blur it    
-    frame = imutils.resize(frame, width=500)
+    #frame = imutils.resize(frame, width=500)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray = cv.GaussianBlur(gray, (21, 21), 0)
     
