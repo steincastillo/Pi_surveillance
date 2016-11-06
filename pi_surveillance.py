@@ -379,7 +379,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         t_thick = 2
         
     ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
-    cv.putText(frame, "Room status: {}".format(text), (10, 20),
+    cv.putText(frame, "Status: {}".format(text), (10, 20),
         cv.FONT_HERSHEY_SIMPLEX, 0.5, t_color, t_thick)
     cv.putText(frame, ts, (10, frame.shape[0] - 10), cv.FONT_HERSHEY_SIMPLEX, 
         0.4, (0, 0, 255), 1)
@@ -505,7 +505,6 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     if key == ord("c"):
         msg_out("C", "Capture image")
         if conf["keep_log"]: logger.warning("Capture image")
-        msg_out("I", "Saving frame...")
         cv.imwrite("capture.jpg", frame)
         
     #if the "q" key is pressed, break from the loop

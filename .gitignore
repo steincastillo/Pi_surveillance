@@ -1,4 +1,4 @@
-conf.json
-conf1.json
+local.json
+remote.json
 *.log
 *.jpg
