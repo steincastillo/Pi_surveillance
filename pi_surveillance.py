@@ -242,6 +242,7 @@ if conf["echo"]:
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
+    print ("[INFO] Press [c] to capture image") 
     print("\n")
     print("Surveillance settings:")
     print("**********************")
@@ -499,6 +500,13 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     send_email("Requested log file", None, "Log keeping option off!")
             
     key = cv.waitKey(1) & 0xFF
+    
+    #if the "c" is pressed, capture image
+    if key == ord("c"):
+        msg_out("C", "Capture image")
+        if conf["keep_log"]: logger.warning("Capture image")
+        msg_out("I", "Saving frame...")
+        cv.imwrite("capture.jpg", frame)
         
     #if the "q" key is pressed, break from the loop
     if key == ord("q"):
