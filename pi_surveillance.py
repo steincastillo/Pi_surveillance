@@ -101,7 +101,7 @@ def send_email(subj="Motion Detected!", filename="detection.jpg", body="Motion d
 def log_setup(filename):
     logger.setLevel(logging.INFO)
     log_file = logging.FileHandler(filename, mode="w")
-    log_format = logging.Formatter("%(asctime)s-[%(levelname)s]-%(message)s")
+    log_format = logging.Formatter("%(asctime)s,[%(levelname)s],%(message)s", "%Y-%m-%d,%H:%M:%S")
     log_file.setFormatter(log_format)
     logger.addHandler(log_file)
 
