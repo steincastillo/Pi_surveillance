@@ -253,6 +253,7 @@ if conf["echo"]:
     print ("  * Resolution: " + str(conf["camera_resolution"]))
     print ("  * FPS : " + str(conf["camera_fps"]))
     print ("  * Sensibility: " + str(conf["min_motion_frames"]))
+    print ("  * Min. Area: " + str(conf["min_area"]))
     print ("  * Rotation: " + str(conf["camera_rotation"]))
     print("**********************")
     print ("  * Sys Check: " + str(conf["sys_check_seconds"]))
@@ -386,16 +387,16 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     if sense_flag:
         sense_data = get_sense_data()
         info = str(sense_data[0]) #temperature
-        cv.putText(frame, "Temperature: {}".format(info), (10, 35),
-            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        cv.putText(frame, "Temperature: {}".format(info), (10, 40),
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
             
         info = str(sense_data[1]) #Humidity
-        cv.putText(frame, "Humidity: {}".format(info), (10, 50),
-            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        cv.putText(frame, "Humidity: {}".format(info), (10, 60),
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
             
         info = str(sense_data[2]) #Pressure
-        cv.putText(frame, "Pressure: {}".format(info), (10, 65),
-            cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+        cv.putText(frame, "Pressure: {}".format(info), (10, 80),
+            cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
         
     #check to see if the room is occupied
     if text == "Occupied":
