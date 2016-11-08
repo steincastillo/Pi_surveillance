@@ -2,3 +2,4 @@ local.json
 remote.json
 *.log
 *.jpg
+*.csv
