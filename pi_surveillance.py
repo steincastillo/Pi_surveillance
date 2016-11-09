@@ -144,6 +144,8 @@ def sys_check():
         elif emsg["subject"]=="reset log": cmd = "RL"
         elif emsg["subject"]=="send system": cmd = "SS"
         elif emsg["subject"]=="send ping": cmd = "SI"
+        elif emsg["subject"]=="stop email": cmd = "SE"
+        elif emsg["subject"]=="start email": cmd = "IE"
         else: cmd = "UC"   
     except:
         cmd = "NC"
@@ -498,7 +500,17 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     send_email("Requested log file", LOGNAME, "Sending requested activity log @")
                 else: 
                     send_email("Requested log file", None, "Log keeping option off!")
-            
+            elif cmd =="SE":    #stop eemail
+                msg_out("C", "Stop email command received!")
+                if conf["keep_log"]:
+                    logger.warning("Stop email command received")
+                    conf["send_email"] = False
+            elif cmd =="IE":    #start eemail
+                msg_out("C", "Start email command received!")
+                if conf["keep_log"]:
+                    logger.warning("Start email command received")
+                    conf["send_email"] = True
+                     
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
