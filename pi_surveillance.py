@@ -477,6 +477,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 f1.write(line)
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
+                means = cv.mean(gray)
+                line = time_s+","+"Image brightness level"+str(means[0])+"\n"
+                f1.write(line)
                 f1.flush()
                 f1.close
                 #send the email
@@ -500,12 +503,12 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     send_email("Requested log file", LOGNAME, "Sending requested activity log @")
                 else: 
                     send_email("Requested log file", None, "Log keeping option off!")
-            elif cmd =="SE":    #stop eemail
+            elif cmd =="SE":    #stop email
                 msg_out("C", "Stop email command received!")
                 if conf["keep_log"]:
                     logger.warning("Stop email command received")
                     conf["send_email"] = False
-            elif cmd =="IE":    #start eemail
+            elif cmd =="IE":    #start email
                 msg_out("C", "Start email command received!")
                 if conf["keep_log"]:
                     logger.warning("Start email command received")
@@ -517,6 +520,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     if key == ord("c"):
         msg_out("C", "Capture image")
         if conf["keep_log"]: logger.warning("Capture image")
+        means = cv.mean(gray)
+        means = means[0]
+        if means < 50: msg_out("I", "Image too dark")
         cv.imwrite("capture.jpg", frame)
         
     #if the "q" key is pressed, break from the loop
