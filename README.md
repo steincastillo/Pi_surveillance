@@ -29,7 +29,7 @@ The available configuration elements are:
 `sys_check_seconds`: [number] of seconds to wait to check if a remote comand has been sent via email typically: 600  
 `sense_hat`: [true/false] -  set to 'true' if sense-hat attached and want to get temperature/pressure/humidity readings  
 `camera_warmup_time`: [number] of seconds the camera needs to adjust focus, exposure, etc.  
-`camera_resolution`: [number] to set the camera rotation in degrees 
+`camera_resolution`: [number] to set the camera rotation in degrees  
 `camera_rotation`: [number, number] to set the picture resolution  
 `camera_fps`: [number] of frames per second. typically: 16  
 `delta_thresh`: [number] to set the image threshold adjustment  
