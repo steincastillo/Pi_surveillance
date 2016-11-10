@@ -45,11 +45,13 @@ several version of the **default.json** file can be saved for different situatio
 ###Remote control 
 **Pi_surveillance** can be remotely controled. You just need to send a simple email to you raspberry with the command on the subject line.  
 The available commands are:  
-* send picture: Take a picture and send it back  
-* send ping: Send a short text indicating the system is up and running  
-* send log: Send the system log file  
-* send system: Send a file with the current uptime, processor usage and available memory  
-* reset log: Initialize the log file and erase the current file  
+* **send picture**: Take a picture and send it back  
+* **send ping**: Send a short text indicating the system is up and running  
+* **send log**: Send the system log file  
+* **send system**: Send a file with the current uptime, processor usage and available memory  
+* **reset log**: Initialize the log file and erase the current file  
+* **stop email**: stops the monitor from sending emails when motion is detected
+* **start email**: initiates the emails sending when motion is detected
 
 ###how to launch
 Once you have configured the default.json file to your needs, launch the surveillance system from the command line:
