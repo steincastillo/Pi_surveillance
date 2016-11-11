@@ -11,7 +11,7 @@
 * Ability to control the monitor remotely over email  
 * Code independent configuration  
 
-###What do you need
+###What you need
 In order to properly run the Pi_surveillance system you will need:  
 * Raspberry Pi (2 or higher) running and updated version of raspbian (PIXEL)  
 * OpenCV properly configured   
@@ -41,10 +41,10 @@ The available configuration elements are:
 `toaddr`: [email address] to whom the alarms and other information will be sent to  
 `window_title` [title] of the video feed window  
 
-several version of the **default.json** file can be saved for different situations
+several version of the **default.json** file can be saved to acommodate different needs  
 
 ###Remote control 
-**Pi_surveillance** can be remotely controled. You just need to send a simple email to you raspberry with the command on the subject line.  
+**Pi_surveillance** can be remotely controled. You just need to send a Gmail account for the raspberry. Commands to the monitor are sent using the subject line of the email.  
 The available commands are:  
 * **send picture**: Take a picture and send it back  
 * **send ping**: Send a short text indicating the system is up and running  
@@ -54,10 +54,14 @@ The available commands are:
 * **stop email**: stops the monitor from sending emails when motion is detected
 * **start email**: initiates the emails sending when motion is detected
 
-###how to launch
-Once you have configured the default.json file to your needs, launch the surveillance system from the command line:
+###Usage
+To launch the surveillance system from the command line:
 
+####python3 pi_surveillance.py --help
 ####python3 pi_surveillance.py --conf default.json
 
 ###Additional credits
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
+
+###Additional notes
+This version of the monitor has been tested with Pyhton 3 only.
