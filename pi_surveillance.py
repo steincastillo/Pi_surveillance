@@ -285,7 +285,6 @@ if conf["sense_hat"]:
         sense.show_message("Sensing: ON", scroll_speed=0.05)
     except:
         msg_out("E", "Sense Hat NOT detected...")
-        sense_flag = False
         if conf["keep_log"]: logger.error("Sense hat NOT detected...")
 
 #initialize CAMERA
@@ -478,7 +477,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
                 means = cv.mean(gray)
-                line = time_s+","+"Image brightness level"+","+str(means[0])+"\n"
+                line = time_s+","+"Image brightness level"+","+str(int(means[0]))+"\n"
                 f1.write(line)
                 f1.flush()
                 f1.close
@@ -506,13 +505,14 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             elif cmd =="SE":    #stop email
                 msg_out("C", "Stop email command received!")
                 if conf["keep_log"]:
-                    logger.warning("Stop email command received")
+                    logger.warning("Stop email command received!")
                     conf["send_email"] = False
             elif cmd =="IE":    #start email
                 msg_out("C", "Start email command received!")
                 if conf["keep_log"]:
-                    logger.warning("Start email command received")
+                    logger.warning("Start email command received!")
                     conf["send_email"] = True
+                    send_email("eMail started", None, "eMail system started")
                      
     key = cv.waitKey(1) & 0xFF
     
@@ -522,7 +522,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         if conf["keep_log"]: logger.warning("Capture image")
         means = cv.mean(gray)
         means = means[0]
-        if means < 50: msg_out("I", "Image too dark")
+        if means < 50: msg_out("I", "Image too dark, Brightness level: "+str(int(means)))
         cv.imwrite("capture.jpg", frame)
         
     #if the "q" key is pressed, break from the loop
