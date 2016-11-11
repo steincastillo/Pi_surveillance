@@ -478,7 +478,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
                 means = cv.mean(gray)
-                line = time_s+","+"Image brightness level"+str(means[0])+"\n"
+                line = time_s+","+"Image brightness level"+","+str(means[0])+"\n"
                 f1.write(line)
                 f1.flush()
                 f1.close
