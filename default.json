@@ -4,6 +4,7 @@
     "show_video": true,
     "ghost_video": false,
     "echo": true,
+    "alarm": true,
     "sys_check_seconds": 60,
     "sense_hat": true,
     "camera_warmup_time": 2.0,
