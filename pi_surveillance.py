@@ -5,7 +5,7 @@
 """
 pi_surveillance.py
 Date created: 08-Oct-2016
-Version: 2.0
+Version: 2.5
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
 
@@ -209,6 +209,22 @@ def get_sense_data():
     sense_data.append(round(sense.get_pressure(),1))
         
     return sense_data
+    
+def display_alarm (seconds = 5):
+    time_in = datetime.datetime.now()
+    print ("sense alarm")
+    print (time_in)
+    while (datetime.datetime.now() - time_in).seconds <= seconds:
+        sense.set_pixels(red_flag)
+        time.sleep(0.4)
+        sense.set_pixels(blue_flag)
+        time.sleep(0.4)
+    global sense_alarm
+    sense_alarm = False
+    print (sense_alarm)
+    sense.clear()
+        
+    
 
 ###########################
 #          Settings       #
@@ -240,7 +256,7 @@ if conf["echo"]:
     print("**************************************")
     print("*          PI Surveillance           *")
     print("*                                    *")
-    print("*           Version: 2.0             *")
+    print("*           Version: 2.5             *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -262,6 +278,7 @@ if conf["echo"]:
     print ("  * Sys Check: " + str(conf["sys_check_seconds"]))
     print ("  * Echo: " + str(conf["echo"]))
     print ("  * Sense Hat: " + str(conf["sense_hat"]))
+    print ("  * Sense alarm: " + str(conf["alarm"]))
     print ("\n")
 
 #Initialize LOG FILE
@@ -281,6 +298,31 @@ if conf["sense_hat"]:
         sense=SenseHat()
         msg_out("I", "Sense Hat detected...")
         sense_flag = True
+        sense_alarm = False
+        
+        #define sensor hat display colors
+        R = [255, 0, 0]     #red
+        B = [0, 0, 255]     #blue
+        E = [0, 0, 0]       #empty/black
+        blue_flag = [
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B]
+        red_flag = [
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,]
+
         if conf["keep_log"]: logger.info("Sense Hat detected...")
         sense.show_message("Sensing: ON", scroll_speed=0.05)
     except:
@@ -412,6 +454,10 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             if motionCounter >= conf["min_motion_frames"]:
                 msg_out("A", "Motion detected!!!")
                 if conf["keep_log"]: logger.critical("Motion detected!!!")
+                
+                if (sense_flag) and (conf["alarm"]) and (not sense_alarm):
+                    sense_alarm = True
+                    Thread(target = display_alarm).start()
                 
                 if conf["send_email"]:
                     #save the frame
