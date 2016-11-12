@@ -5,7 +5,7 @@
 """
 pi_surveillance.py
 Date created: 08-Oct-2016
-Version: 2.0
+Version: 2.5
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
 
@@ -144,6 +144,8 @@ def sys_check():
         elif emsg["subject"]=="reset log": cmd = "RL"
         elif emsg["subject"]=="send system": cmd = "SS"
         elif emsg["subject"]=="send ping": cmd = "SI"
+        elif emsg["subject"]=="stop email": cmd = "SE"
+        elif emsg["subject"]=="start email": cmd = "IE"
         else: cmd = "UC"   
     except:
         cmd = "NC"
@@ -208,6 +210,21 @@ def get_sense_data():
         
     return sense_data
 
+#Display intermitent blue and red lights on the sense hat display    
+def display_alarm (seconds = 5):
+    time_in = datetime.datetime.now()
+    while (datetime.datetime.now() - time_in).seconds <= seconds:
+        sense.set_pixels(red_flag)
+        time.sleep(0.3)
+        sense.set_pixels(blue_flag)
+        time.sleep(0.3)
+    global sense_alarm
+    #reset the sense hat alarm indicator and clear the display
+    sense_alarm = False
+    sense.clear()
+        
+    
+
 ###########################
 #          Settings       #
 ###########################
@@ -238,7 +255,7 @@ if conf["echo"]:
     print("**************************************")
     print("*          PI Surveillance           *")
     print("*                                    *")
-    print("*           Version: 2.0             *")
+    print("*           Version: 2.5             *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -260,6 +277,7 @@ if conf["echo"]:
     print ("  * Sys Check: " + str(conf["sys_check_seconds"]))
     print ("  * Echo: " + str(conf["echo"]))
     print ("  * Sense Hat: " + str(conf["sense_hat"]))
+    print ("  * Sense alarm: " + str(conf["alarm"]))
     print ("\n")
 
 #Initialize LOG FILE
@@ -279,11 +297,35 @@ if conf["sense_hat"]:
         sense=SenseHat()
         msg_out("I", "Sense Hat detected...")
         sense_flag = True
+        sense_alarm = False
+        
+        #define sensor hat display colors
+        R = [255, 0, 0]     #red
+        B = [0, 0, 255]     #blue
+        E = [0, 0, 0]       #empty/black
+        blue_flag = [
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B,
+        B,B,B,B,B,B,B,B]
+        red_flag = [
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,
+        R,R,R,R,R,R,R,R,]
+
         if conf["keep_log"]: logger.info("Sense Hat detected...")
         sense.show_message("Sensing: ON", scroll_speed=0.05)
     except:
         msg_out("E", "Sense Hat NOT detected...")
-        sense_flag = False
         if conf["keep_log"]: logger.error("Sense hat NOT detected...")
 
 #initialize CAMERA
@@ -340,6 +382,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         msg_out("I", "Starting background model...")
         if conf["keep_log"]: logger.info("Starting background model...")
         avg = gray.copy().astype("float")
+        #Check image brightness
+        means = cv.mean(gray)
+        if means[0]<50:
+            msg_out("W", "Image is too dark...")
+            if conf["keep_log"]: logger.warning("Image is too dark...")
         rawCapture.truncate(0)
         msg_out("I", "System initiated...")
         if conf["keep_log"]: logger.info("System initiated...")
@@ -412,6 +459,12 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 msg_out("A", "Motion detected!!!")
                 if conf["keep_log"]: logger.critical("Motion detected!!!")
                 
+                #check if alarm should be displayed on the sense hat
+                if (sense_flag) and (conf["alarm"]) and (not sense_alarm):
+                    msg_out("I","Sense Alarm Activated")
+                    sense_alarm = True
+                    Thread(target = display_alarm).start()
+                
                 if conf["send_email"]:
                     #save the frame
                     msg_out("I", "Saving frame...")
@@ -475,6 +528,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 f1.write(line)
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
+                means = cv.mean(gray)
+                line = time_s+","+"Image brightness level"+","+str(int(means[0]))+"\n"
+                f1.write(line)
                 f1.flush()
                 f1.close
                 #send the email
@@ -498,13 +554,27 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     send_email("Requested log file", LOGNAME, "Sending requested activity log @")
                 else: 
                     send_email("Requested log file", None, "Log keeping option off!")
-            
+            elif cmd =="SE":    #stop email
+                msg_out("C", "Stop email command received!")
+                if conf["keep_log"]:
+                    logger.warning("Stop email command received!")
+                    conf["send_email"] = False
+            elif cmd =="IE":    #start email
+                msg_out("C", "Start email command received!")
+                if conf["keep_log"]:
+                    logger.warning("Start email command received!")
+                    conf["send_email"] = True
+                    send_email("eMail started", None, "eMail system started")
+                     
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
     if key == ord("c"):
         msg_out("C", "Capture image")
         if conf["keep_log"]: logger.warning("Capture image")
+        means = cv.mean(gray)
+        means = means[0]
+        if means < 50: msg_out("I", "Image too dark, Brightness level: "+str(int(means)))
         cv.imwrite("capture.jpg", frame)
         
     #if the "q" key is pressed, break from the loop
