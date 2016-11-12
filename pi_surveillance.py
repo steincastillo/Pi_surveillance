@@ -215,12 +215,12 @@ def display_alarm (seconds = 5):
     time_in = datetime.datetime.now()
     while (datetime.datetime.now() - time_in).seconds <= seconds:
         sense.set_pixels(red_flag)
-        time.sleep(0.4)
+        time.sleep(0.3)
         sense.set_pixels(blue_flag)
-        time.sleep(0.4)
+        time.sleep(0.3)
     global sense_alarm
+    #reset the sense hat alarm indicator and clear the display
     sense_alarm = False
-    print (sense_alarm)
     sense.clear()
         
     
@@ -382,6 +382,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         msg_out("I", "Starting background model...")
         if conf["keep_log"]: logger.info("Starting background model...")
         avg = gray.copy().astype("float")
+        #Check image brightness
+        means = cv.mean(gray)
+        if means[0]<50:
+            msg_out("W", "Image is too dark...")
+            if conf["keep_log"]: logger.warning("Image is too dark...")
         rawCapture.truncate(0)
         msg_out("I", "System initiated...")
         if conf["keep_log"]: logger.info("System initiated...")
