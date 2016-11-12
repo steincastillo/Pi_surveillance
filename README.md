@@ -26,6 +26,7 @@ The available configuration elements are:
 `keep log:` [true/false] - set to 'true' if you want to save the activity on a log file  
 `ghost video:` [true/false] - set to true if you want to see the motion detection video feed  
 `echo`: [true/false] - set to true if your raspberry is connected to a screen  
+`alarm`: [true/false] - display blinking blue/red lights on the sense hat display when motion is detected  
 `sys_check_seconds`: [number] of seconds to wait to check if a remote comand has been sent via email typically: 600  
 `sense_hat`: [true/false] -  set to 'true' if sense-hat attached and want to get temperature/pressure/humidity readings  
 `camera_warmup_time`: [number] of seconds the camera needs to adjust focus, exposure, etc.  
@@ -33,7 +34,7 @@ The available configuration elements are:
 `camera_rotation`: [number, number] to set the picture resolution  
 `camera_fps`: [number] of frames per second. typically: 16  
 `delta_thresh`: [number] to set the image threshold adjustment  
-`min_area`: [number] of pixels that have to change in the image to sense motion  
+`min_area`: [number] of pixels that have to change in the image to sense motion. Tipically: 2000  
 `min_upload_seconds`: [number] of seconds to wait before consecutive uploads  
 `min_motion_frames`: [number] of consecutive frames with motion required to trigger the alarm  
 `fromaddr`: [email address] of your raspberry pi (sender) - Gmail account only!  
@@ -64,4 +65,6 @@ To launch the surveillance system from the command line:
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
 
 ###Additional notes
-This version of the monitor has been tested with Pyhton 3 only.
+Current version is 2.5.  
+This version of the monitor has been tested with Pyhton 3 only.  
+Please check license.txt for licensing terms  
