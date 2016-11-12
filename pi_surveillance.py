@@ -209,11 +209,10 @@ def get_sense_data():
     sense_data.append(round(sense.get_pressure(),1))
         
     return sense_data
-    
+
+#Display intermitent blue and red lights on the sense hat display    
 def display_alarm (seconds = 5):
     time_in = datetime.datetime.now()
-    print ("sense alarm")
-    print (time_in)
     while (datetime.datetime.now() - time_in).seconds <= seconds:
         sense.set_pixels(red_flag)
         time.sleep(0.4)
@@ -455,7 +454,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 msg_out("A", "Motion detected!!!")
                 if conf["keep_log"]: logger.critical("Motion detected!!!")
                 
+                #check if alarm should be displayed on the sense hat
                 if (sense_flag) and (conf["alarm"]) and (not sense_alarm):
+                    msg_out("I","Sense Alarm Activated")
                     sense_alarm = True
                     Thread(target = display_alarm).start()
                 
