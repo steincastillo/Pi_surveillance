@@ -604,4 +604,3 @@ if conf["keep_log"]:
 
 camera.close()
 cv.destroyAllWindows()
-
