@@ -146,6 +146,8 @@ def sys_check():
         elif emsg["subject"]=="send ping": cmd = "C5"
         elif emsg["subject"]=="stop email": cmd = "C6"
         elif emsg["subject"]=="start email": cmd = "C7"
+        elif emsg["subject"]=="flash on": cmd = "C8"
+        elif emsg["subject"]=="flash off": cmd = "C9"
         else: cmd = "UC"   
     except:
         cmd = "NC"
@@ -222,11 +224,16 @@ def display_alarm (seconds = 5):
     #reset the sense hat alarm indicator and clear the display
     sense_alarm = False
     sense.clear()
-        
+
+def sense_flash(on = False):
+    if on:
+        sense.set_pixels(white_flag)
+    else:
+        sense.clear()
     
 
 ################
-#       Settings         #
+# Settings         #
 ################
 
 #construct the command line argument parser and parse the arguments
@@ -246,16 +253,16 @@ TOADDR = conf["toaddr"]      #email recipient
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
 #############
-#     Initialize     #
+# Initialize     #
 #############
 
 #initialize console
 if conf["echo"]:
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance                      *")
-    print("*                                                          *")
-    print("*           Version: 2.5                          *")
+    print("*          PI Surveillance           *")
+    print("*                                    *")
+    print("*           Version: 2.5             *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [q] to quit")
@@ -581,7 +588,18 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     logger.warning("Start email command received!")
                     conf["send_email"] = True
                     send_email("eMail started", None, "eMail system started")
-                     
+                    
+            elif cmd == "C8":     #flash on
+                msg_out("C", "Flash on command received!")
+                if conf["keep_log"]: logger.warning("Flash on command received!")
+                sense_flash(True)
+                
+            elif cmd == "C9":     #flash off
+                msg_out("C", "Flash off command received!")
+                if conf["keep_log"]: logger.warning("Flash off command received!")
+                sense_flash(False)
+                
+                
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
