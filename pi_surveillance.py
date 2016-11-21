@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#  
 
 """
 pi_surveillance.py
@@ -40,7 +39,7 @@ USAGE: python3 pi_surveillance.py --conf [file.json]
 #  
 
 #############
-# Libraries #
+#    Libraries     #
 #############
 
 from picamera.array import PiRGBArray
@@ -65,7 +64,7 @@ from email.mime.base import MIMEBase
 from email import encoders
 
 #############
-# Functions #
+#    Functions   #
 #############
 
 #send_mail sends and email and attaches a file when required
@@ -139,13 +138,15 @@ def sys_check():
         mbox.expunge()
         
         #Analyze command
-        if emsg["subject"]=="send picture": cmd = "SP"
-        elif emsg["subject"]=="send log": cmd = "SL"
-        elif emsg["subject"]=="reset log": cmd = "RL"
-        elif emsg["subject"]=="send system": cmd = "SS"
-        elif emsg["subject"]=="send ping": cmd = "SI"
-        elif emsg["subject"]=="stop email": cmd = "SE"
-        elif emsg["subject"]=="start email": cmd = "IE"
+        if emsg["subject"]=="send picture": cmd = "C1"
+        elif emsg["subject"]=="send log": cmd =  "C2"
+        elif emsg["subject"]=="reset log": cmd = "C3"
+        elif emsg["subject"]=="send system": cmd = "C4"
+        elif emsg["subject"]=="send ping": cmd = "C5"
+        elif emsg["subject"]=="stop email": cmd = "C6"
+        elif emsg["subject"]=="start email": cmd = "C7"
+        elif emsg["subject"]=="flash on": cmd = "C8"
+        elif emsg["subject"]=="flash off": cmd = "C9"
         else: cmd = "UC"   
     except:
         cmd = "NC"
@@ -176,7 +177,7 @@ def get_memory():
     
     
 #######################
-# SENSE HAT Functions #
+#  SENSE HAT Functions  #
 #######################
 
 #This function reads the cpu temperature    
@@ -222,12 +223,17 @@ def display_alarm (seconds = 5):
     #reset the sense hat alarm indicator and clear the display
     sense_alarm = False
     sense.clear()
-        
+
+def sense_flash(on = False):
+    if on:
+        sense.set_pixels(white_flag)
+    else:
+        sense.clear()
     
 
-###########################
-#          Settings       #
-###########################
+################
+# Settings         #
+################
 
 #construct the command line argument parser and parse the arguments
 ap = argparse.ArgumentParser()
@@ -245,9 +251,9 @@ TOADDR = conf["toaddr"]      #email recipient
 #log file settings
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
-########################
-#       Initialize     #
-########################
+#############
+# Initialize     #
+#############
 
 #initialize console
 if conf["echo"]:
@@ -260,6 +266,8 @@ if conf["echo"]:
     print("\n")
     print ("[INFO] Press [q] to quit")
     print ("[INFO] Press [c] to capture image") 
+    print ("[INFO] Press [b] to check image brightness level")
+    print ("[INFO] Press [h] for help") 
     print("\n")
     print("Surveillance settings:")
     print("**********************")
@@ -302,7 +310,9 @@ if conf["sense_hat"]:
         #define sensor hat display colors
         R = [255, 0, 0]     #red
         B = [0, 0, 255]     #blue
+        W = [255, 255, 255] #white
         E = [0, 0, 0]       #empty/black
+        
         blue_flag = [
         B,B,B,B,B,B,B,B,
         B,B,B,B,B,B,B,B,
@@ -312,6 +322,7 @@ if conf["sense_hat"]:
         B,B,B,B,B,B,B,B,
         B,B,B,B,B,B,B,B,
         B,B,B,B,B,B,B,B]
+        
         red_flag = [
         R,R,R,R,R,R,R,R,
         R,R,R,R,R,R,R,R,
@@ -320,7 +331,17 @@ if conf["sense_hat"]:
         R,R,R,R,R,R,R,R,
         R,R,R,R,R,R,R,R,
         R,R,R,R,R,R,R,R,
-        R,R,R,R,R,R,R,R,]
+        R,R,R,R,R,R,R,R]
+        
+        white_flag = [
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W,
+        W,W,W,W,W,W,W,W]
 
         if conf["keep_log"]: logger.info("Sense Hat detected...")
         sense.show_message("Sensing: ON", scroll_speed=0.05)
@@ -361,7 +382,7 @@ if conf["ghost_video"]:
     cv.namedWindow("Frame Delta", cv.WINDOW_NORMAL)
 
 #############
-# Main loop #
+#   Main loop   #
 #############
 
 #Initiate video capture from the camera
@@ -384,6 +405,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         avg = gray.copy().astype("float")
         #Check image brightness
         means = cv.mean(gray)
+        msg_out("I","Average image brightness [0-255]: "+str(int(means[0])))
         if means[0]<50:
             msg_out("W", "Image is too dark...")
             if conf["keep_log"]: logger.warning("Image is too dark...")
@@ -494,20 +516,34 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             lastsyscheck = timestamp
             cmd = sys_check()
             
-            if cmd == "SP":     #send picture
+            if cmd == "C1":     #send picture
                 msg_out("C", "Send picture command received!")
                 if conf["keep_log"]: logger.warning("Send picture command received!")
                 msg_out("I", "Saving frame...")
                 cv.imwrite("request.jpg", frame)
                 msg_out("I", "Sending picture...")
                 send_email("Requested Image", "request.jpg", "Sending requested image @")
+
+            elif cmd == "C2":  #send log
+                msg_out("C", "Send log command received!")
+                if conf["keep_log"]: 
+                    logger.warning("Send log command received!")
+                    msg_out("I", "Sending log...")
+                    send_email("Requested log file", LOGNAME, "Sending requested activity log @")
+                else: 
+                    send_email("Requested log file", None, "Log keeping option off!")
+
+            elif cmd == "C3":     #reset log
+                msg_out("C", "Reset log command received!")
+                if conf["keep_log"]:
+                    msg_out("I", "Deleting old log file")
+                    os.remove(LOGNAME)
+                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
+                    log_setup(LOGNAME)
+                    msg_out("I", "Log file created...")
+                    logger.warning("Log file reset")
                 
-            elif cmd == "SI":     #send ping
-                msg_out("C", "Send ping command received!")
-                if conf["keep_log"]: logger.warning("Send ping command received!")
-                send_email("Requested Ping", None, "System up and running! @")
-                
-            elif cmd == "SS":     #send system
+            elif cmd == "C4":     #send system
                 msg_out("C", "Send system command received!")
                 if conf["keep_log"]: logger.warning("Send system command received!")
                 cpu_load = get_cpu_load()
@@ -536,36 +572,36 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 #send the email
                 msg_out("I", "Sending system info")
                 send_email("Requested sys info", "sysinfo.csv", "Requested system information")
-            elif cmd == "RL":     #reset log
-                msg_out("C", "Reset log command received!")
-                if conf["keep_log"]:
-                    msg_out("I", "Deleting old log file")
-                    os.remove(LOGNAME)
-                    LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
-                    log_setup(LOGNAME)
-                    msg_out("I", "Log file created...")
-                    logger.warning("Log file reset")
-                
-            elif cmd == "SL":  #send log
-                msg_out("C", "Send log command received!")
-                if conf["keep_log"]: 
-                    logger.warning("Send log command received!")
-                    msg_out("I", "Sending log...")
-                    send_email("Requested log file", LOGNAME, "Sending requested activity log @")
-                else: 
-                    send_email("Requested log file", None, "Log keeping option off!")
-            elif cmd =="SE":    #stop email
+
+            elif cmd == "C5":     #send ping
+                msg_out("C", "Send ping command received!")
+                if conf["keep_log"]: logger.warning("Send ping command received!")
+                send_email("Requested Ping", None, "System up and running! @")
+
+            elif cmd =="C6":    #stop email
                 msg_out("C", "Stop email command received!")
                 if conf["keep_log"]:
                     logger.warning("Stop email command received!")
                     conf["send_email"] = False
-            elif cmd =="IE":    #start email
+
+            elif cmd =="C7":    #start email
                 msg_out("C", "Start email command received!")
                 if conf["keep_log"]:
                     logger.warning("Start email command received!")
                     conf["send_email"] = True
                     send_email("eMail started", None, "eMail system started")
-                     
+                    
+            elif cmd == "C8":     #flash on
+                msg_out("C", "Flash on command received!")
+                if conf["keep_log"]: logger.warning("Flash on command received!")
+                sense_flash(True)
+                
+            elif cmd == "C9":     #flash off
+                msg_out("C", "Flash off command received!")
+                if conf["keep_log"]: logger.warning("Flash off command received!")
+                sense_flash(False)
+                
+                
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
@@ -576,6 +612,23 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         means = means[0]
         if means < 50: msg_out("I", "Image too dark, Brightness level: "+str(int(means)))
         cv.imwrite("capture.jpg", frame)
+        
+    #if the "b" is pressed, check image brightness
+    if key == ord("b"):
+        means = cv.mean(gray)
+        means = means[0]
+        msg_out("I", "Image brightness level [0-255]: "+str(int(means)))
+        
+    #if the "h" is pressed, display console help
+    if key == ord("h"):
+        print("\n")
+        print ("Console commands:")
+        print ("[INFO] Press [q] to quit")
+        print ("[INFO] Press [c] to capture image") 
+        print ("[INFO] Press [b] to check image brightness level") 
+        print("\n")
+        
+        
         
     #if the "q" key is pressed, break from the loop
     if key == ord("q"):
