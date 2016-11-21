@@ -1,6 +1,7 @@
 local.json
 remote.json
 indoor.json
+test.json
 *.log
 *.jpg
 *.csv
