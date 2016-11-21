@@ -61,7 +61,13 @@ The available commands are:
 To launch the surveillance system from the command line:
 
 ####python3 pi_surveillance.py --help
-####python3 pi_surveillance.py --conf default.json
+####python3 pi_surveillance.py --conf default.json  
+
+###Console commands
+While running pi_surveillance from a terminal, you can use use the following commands:
+`c`: Capture current video feed to a still image  
+`b`: Display the brightness level of the current video feed    
+`q`: Terminate the program  
 
 ###Additional credits
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
