@@ -403,6 +403,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         avg = gray.copy().astype("float")
         #Check image brightness
         means = cv.mean(gray)
+        msg_out("I","Average image brightness [0-255]: "+str(int(means[0])))
         if means[0]<50:
             msg_out("W", "Image is too dark...")
             if conf["keep_log"]: logger.warning("Image is too dark...")
