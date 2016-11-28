@@ -611,8 +611,12 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         means = cv.mean(gray)
         means = means[0]
         if means < 50: msg_out("I", "Image too dark, Brightness level: "+str(int(means)))
-        cv.imwrite("capture.jpg", frame)
-        
+         cv.imwrite("capture.jpg", frame)
+        #check if static image needs to be updated
+        if not conf["show_video"]:
+            cv.imshow("STATIC IMAGE", frame)
+            msg_out("I", "Static image initiated")
+               
     #if the "b" is pressed, check image brightness
     if key == ord("b"):
         means = cv.mean(gray)
