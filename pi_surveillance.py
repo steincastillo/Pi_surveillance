@@ -193,13 +193,13 @@ def cpu_temp():
 def get_sense_data():
 
     sense_data = []
-    cpu = cpu_temp()
+    sys_temp = cpu_temp()
 
     #Log "real" temperature corrected for CPU heat effect
     temp1 = sense.get_temperature()
     temp2 = sense.get_temperature_from_pressure()
     temp3 = sense.get_temperature_from_humidity()
-    temp = ((temp1+temp2+temp3)/3)-(cpu/5)
+    temp = ((temp1+temp2+temp3)/3)-(sys_temp/5)
     temp = round(temp,1)     
     sense_data.append(temp)  
 
@@ -548,6 +548,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 if conf["keep_log"]: logger.warning("Send system command received!")
                 cpu_load = get_cpu_load()
                 cpu_uptime = get_cpu_uptime()
+                sys_temp = cpu_temp()
                 mem_ava = get_memory()
                 #prepare system information file
                 f1 = open ("sysinfo.csv", "w")
@@ -561,6 +562,8 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 line = time_s+","+"CPU Load [5]"+","+cpu_load[1]+"\n"
                 f1.write(line)
                 line = time_s+","+"CPU Load [15]"+","+cpu_load[2]+"\n"
+                f1.write(line)
+                line = time_s+","+"CPU Temp"+","+str(round(sys_temp),1)+"\n"
                 f1.write(line)
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
