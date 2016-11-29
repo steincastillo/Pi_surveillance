@@ -50,7 +50,7 @@ The available commands are:
 * **send picture**: Take a picture and send it back  
 * **send ping**: Send a short text indicating the system is up and running  
 * **send log**: Send the system log file  
-* **send system**: Send a file with the current uptime, processor usage and available memory  
+* **send system**: Send a file with the current uptime, processor usage, CPU temperature and other system parameters    
 * **reset log**: Initialize the log file and erase the current file  
 * **stop email**: Stops the monitor from sending emails when motion is detected  
 * **start email**: Initiates the emails sending when motion is detected  
