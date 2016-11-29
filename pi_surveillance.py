@@ -552,7 +552,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 mem_ava = get_memory()
                 #prepare system information file
                 f1 = open ("sysinfo.csv", "w")
-                line ="Time"+","+"Parm"+","+"Value"+"\n"
+                line ="Time"+","+"Param"+","+"Value"+"\n"
                 f1.write(line)
                 time_s = datetime.datetime.now().strftime("%H:%M:%S")
                 line = time_s+","+"uptime"+","+cpu_uptime+"\n"
@@ -563,7 +563,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 f1.write(line)
                 line = time_s+","+"CPU Load [15]"+","+cpu_load[2]+"\n"
                 f1.write(line)
-                line = time_s+","+"CPU Temp"+","+str(round(sys_temp),1)+"\n"
+                line = time_s+","+"CPU Temp"+","+str(round(sys_temp,1))+"\n"
                 f1.write(line)
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
