@@ -45,7 +45,7 @@ The available configuration elements are:
 several version of the **default.json** file can be saved to acommodate different needs  
 
 ###Remote control 
-**Pi_surveillance** can be remotely controled. You just need to send a Gmail account for the raspberry. Commands to the monitor are sent using the subject line of the email.  
+**Pi_surveillance** can be remotely controled. You just need to set a Gmail account for the raspberry. Commands to the monitor are sent using the subject line of the email.  
 The available commands are:  
 * **send picture**: Take a picture and send it back  
 * **send ping**: Send a short text indicating the system is up and running  
