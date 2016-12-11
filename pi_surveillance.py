@@ -292,6 +292,7 @@ if conf["echo"]:
     print ("\n")
 
 #Initialize LOG FILE
+logger = None
 if conf["keep_log"]:
     logger = logging.getLogger("Pi_surveillance")
     log_setup(LOGNAME)
@@ -620,6 +621,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             elif cmd == "C11":      #away
                 msg_out("C", "away command received!")
                 if conf["keep_log"]: logger.warning("away command received!")
+                if logger == None:
+                    logger = logging.getLogger("Pi_surveillance")
+                    log_setup(LOGNAME)
+                    msg_out("I", "Log file created...")
+                    logger.info("Log file created")
                 conf["send_email"] = True
                 conf["keep_log"] = True
                     
