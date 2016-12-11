@@ -55,7 +55,9 @@ The available commands are:
 * **stop email**: Stops the monitor from sending emails when motion is detected  
 * **start email**: Initiates the emails sending when motion is detected  
 * **flash on**: Turns the sense hat display on (all white)  
-* **flash off**: Turns the sense hat display off
+* **flash off**: Turns the sense hat display off  
+* **home: Deactivates the keep log and send mail  
+* **away: Activates keep log and send mail  
 
 ###Usage
 To launch the surveillance system from the command line:

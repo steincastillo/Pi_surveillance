@@ -147,6 +147,9 @@ def sys_check():
         elif emsg["subject"]=="start email": cmd = "C7"
         elif emsg["subject"]=="flash on": cmd = "C8"
         elif emsg["subject"]=="flash off": cmd = "C9"
+        elif emsg["subject"]=="home": cmd = "C10"
+        elif emsg["subject"]=="away": cmd = "C11"
+
         else: cmd = "UC"   
     except:
         cmd = "NC"
@@ -567,6 +570,10 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 f1.write(line)
                 line = time_s+","+"Ava. Memory"+","+str(mem_ava)+"\n"
                 f1.write(line)
+                line = time_s+","+"Keep Log"+","+str(conf[keep_log])+"\n"
+                f1.write(line)
+                line = time_s+","+"Send Mail"+","+str(conf[send_mail])+"\n"
+                f1.write(line)
                 means = cv.mean(gray)
                 line = time_s+","+"Image brightness level"+","+str(int(means[0]))+"\n"
                 f1.write(line)
@@ -603,8 +610,19 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 msg_out("C", "Flash off command received!")
                 if conf["keep_log"]: logger.warning("Flash off command received!")
                 sense_flash(False)
-                
-                
+
+            elif cmd == "C10":      #home
+                msg_out("C", "home command received!")
+                if conf["keep_log"]: logger.warning("Home command received!")
+                conf["send_email"] = False
+                conf["keep_log"] = False
+
+            elif cmd == "C11":      #away
+                msg_out("C", "away command received!")
+                if conf["keep_log"]: logger.warning("away command received!")
+                conf["send_email"] = True
+                conf["keep_log"] = True
+                    
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
