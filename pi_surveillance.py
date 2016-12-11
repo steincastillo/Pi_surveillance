@@ -572,7 +572,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 f1.write(line)
                 line = time_s+","+"Keep Log"+","+str(conf["keep_log"])+"\n"
                 f1.write(line)
-                line = time_s+","+"Send Mail"+","+str(conf["send_mail"])+"\n"
+                line = time_s+","+"Send Mail"+","+str(conf["send_email"])+"\n"
                 f1.write(line)
                 means = cv.mean(gray)
                 line = time_s+","+"Image brightness level"+","+str(int(means[0]))+"\n"
