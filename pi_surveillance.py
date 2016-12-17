@@ -617,6 +617,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 if conf["keep_log"]: logger.warning("Home command received!")
                 conf["send_email"] = False
                 conf["keep_log"] = False
+                conf["alarm"] = False
 
             elif cmd == "C11":      #away
                 msg_out("C", "away command received!")
@@ -628,7 +629,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                     logger.info("Log file created")
                 conf["send_email"] = True
                 conf["keep_log"] = True
-                    
+                conf["alarm"] = True
+                send_email("Away mode on", None, "Away mode activated")
+ 
     key = cv.waitKey(1) & 0xFF
     
     #if the "c" is pressed, capture image
@@ -658,9 +661,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         print ("[INFO] Press [c] to capture image") 
         print ("[INFO] Press [b] to check image brightness level") 
         print("\n")
-        
-        
-        
+            
     #if the "q" key is pressed, break from the loop
     if key == ord("q"):
         break
