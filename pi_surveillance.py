@@ -655,7 +655,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 
     #if the "e" is pressed, display image brightness
     if key == ord("e"):
-        msg_out("I", "Display environment sensors")
+        msg_out("I", "Environment sensors readings")
         if sense_flag:
             sense_data = get_sense_data()
             info = str(sense_data[0]) #temperature
@@ -664,15 +664,17 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("I", "Humidity: " + info)
             info = str(sense_data[2]) #Pressure
             msg_out("I", "Pressure: " + info)
+        else:
+            msg_out("W", "Sense Hat not detected")
         
     #if the "h" is pressed, display console help
     if key == ord("h"):
         print("\n")
         print ("Console commands:")
-        print ("[INFO] Press [q] to quit")
-        print ("[INFO] Press [c] to capture image") 
         print ("[INFO] Press [b] to dislay image brightness level") 
-         print ("[INFO] Press [e] to display enviroment sensors")
+        print ("[INFO] Press [c] to capture image") 
+        print ("[INFO] Press [e] to display enviroment sensors")
+        print ("[INFO] Press [q] to quit")
         print("\n")
             
     #if the "q" key is pressed, break from the loop
