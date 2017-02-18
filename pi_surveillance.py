@@ -647,11 +647,23 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             cv.imshow("STATIC IMAGE", frame)
             msg_out("I", "Static image updated")
                
-    #if the "b" is pressed, check image brightness
+    #if the "b" is pressed, display image brightness
     if key == ord("b"):
         means = cv.mean(gray)
         means = means[0]
         msg_out("I", "Image brightness level [0-255]: "+str(int(means)))
+
+    #if the "e" is pressed, display image brightness
+    if key == ord("e"):
+        msg_out("I", "Display environment sensors")
+        if sense_flag:
+            sense_data = get_sense_data()
+            info = str(sense_data[0]) #temperature
+            msg_out("I", "Temperature: " + info)
+            info = str(sense_data[1]) #Humidity          
+            msg_out("I", "Humidity: " + info)
+            info = str(sense_data[2]) #Pressure
+            msg_out("I", "Pressure: " + info)
         
     #if the "h" is pressed, display console help
     if key == ord("h"):
@@ -659,7 +671,8 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         print ("Console commands:")
         print ("[INFO] Press [q] to quit")
         print ("[INFO] Press [c] to capture image") 
-        print ("[INFO] Press [b] to check image brightness level") 
+        print ("[INFO] Press [b] to dislay image brightness level") 
+         print ("[INFO] Press [e] to display enviroment sensors")
         print("\n")
             
     #if the "q" key is pressed, break from the loop
