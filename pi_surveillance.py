@@ -655,7 +655,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
 
     #if the "e" is pressed, display image brightness
     if key == ord("e"):
-        msg_out("I", "Environment sensors readings")
+        msg_out("I", "Environment sensors reading:")
         if sense_flag:
             sense_data = get_sense_data()
             info = str(sense_data[0]) #temperature
@@ -663,7 +663,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             info = str(sense_data[1]) #Humidity          
             msg_out("I", "Humidity: " + info)
             info = str(sense_data[2]) #Pressure
-            msg_out("I", "Pressure: " + info)
+            msg_out("I", "Pressure: " + info+"\n")
         else:
             msg_out("W", "Sense Hat not detected")
         
