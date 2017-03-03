@@ -69,8 +69,8 @@ To launch the surveillance system from the command line:
 While running pi_surveillance from a terminal, you can use use the following commands:  
 `b`: Display the brightness level of the current video feed   
 `c`: Capture current video feed to a still image  
-`e`: Dìsplay Sense Hat environment sensors information  
-`h`: Dìsplay terminal commands help  
+`e`: Display Sense Hat environment sensors information  
+`h`: Display terminal commands help  
 `q`: Terminate the program  
 
 ###Additional credits
@@ -78,5 +78,5 @@ This project is based on previous work done by **Adrian Rosebrock** of [pyimages
 
 ###Additional notes
 Current version is 2.5.  
-This version of the monitor has been tested with Pyhton 3 only.  
+This version of the monitor has been tested with Pyhton 3  and raspberry Pi 3 only.  
 Please check license.txt for licensing terms  
