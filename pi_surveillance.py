@@ -460,15 +460,15 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
     #Add enviroment information
     if sense_flag:
         sense_data = get_sense_data()
-        info = str(sense_data[0]) #temperature
+        info = str(sense_data[0]) + " C" #temperature
         cv.putText(frame, "Temperature: {}".format(info), (10, 40),
             cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
             
-        info = str(sense_data[1]) #Humidity
+        info = str(sense_data[1]) + " %" #Humidity
         cv.putText(frame, "Humidity: {}".format(info), (10, 60),
             cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
             
-        info = str(sense_data[2]) #Pressure
+        info = str(sense_data[2]) + " mb" #Pressure
         cv.putText(frame, "Pressure: {}".format(info), (10, 80),
             cv.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
         
