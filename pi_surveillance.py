@@ -4,7 +4,7 @@
 """
 pi_surveillance.py
 Date created: 08-Oct-2016
-Version: 2.5
+Version: 2.6
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
 
@@ -46,6 +46,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
 from datetime import timedelta
+from requests import get
 import argparse
 import warnings
 import datetime
@@ -251,6 +252,9 @@ FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
 TOADDR = conf["toaddr"]      #email recipient
 
+ if conf["oweather"]:
+    oweather_call = "http://api.openweathermap.org/data/2.5/weather?id=" + conf["oweather_city"] + "&units=metric&appid=" + conf[ "oweather_key"]
+
 #log file settings
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
@@ -264,13 +268,14 @@ if conf["echo"]:
     print("**************************************")
     print("*          PI Surveillance           *")
     print("*                                    *")
-    print("*           Version: 2.5             *")
+    print("*           Version: 2.6             *")
     print("**************************************")
     print("\n")
-    print ("[INFO] Press [q] to quit")
-    print ("[INFO] Press [c] to capture image") 
     print ("[INFO] Press [b] to check image brightness level")
+    print ("[INFO] Press [c] to capture image") 
+    print ("[INFO] Press [e] to display enviroment information")
     print ("[INFO] Press [h] for help") 
+    print ("[INFO] Press [q] to quit")
     print("\n")
     print("Surveillance settings:")
     print("**********************")
@@ -666,6 +671,8 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("I", "Pressure: " + info+ " mb"+"\n")
         else:
             msg_out("W", "Sense Hat not detected")
+        if conf["oweather"]:
+            print (oweather_call)
         
     #if the "h" is pressed, display console help
     if key == ord("h"):
