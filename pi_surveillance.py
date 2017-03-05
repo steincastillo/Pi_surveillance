@@ -252,7 +252,7 @@ FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
 TOADDR = conf["toaddr"]      #email recipient
 
- if conf["oweather"]:
+if conf["oweather"]:
     oweather_call = "http://api.openweathermap.org/data/2.5/weather?id=" + conf["oweather_city"] + "&units=metric&appid=" + conf[ "oweather_key"]
 
 #log file settings
@@ -294,6 +294,7 @@ if conf["echo"]:
     print ("  * Echo: " + str(conf["echo"]))
     print ("  * Sense Hat: " + str(conf["sense_hat"]))
     print ("  * Sense alarm: " + str(conf["alarm"]))
+    print ("  * Open Weather: " + str(conf["oweather"]))
     print ("\n")
 
 #Initialize LOG FILE
@@ -673,6 +674,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("W", "Sense Hat not detected")
         if conf["oweather"]:
             print (oweather_call)
+            open_weather = get(oweather_call).json()
+            print (open_weather["main"])
+            
         
     #if the "h" is pressed, display console help
     if key == ord("h"):
