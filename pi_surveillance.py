@@ -659,11 +659,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         if sense_flag:
             sense_data = get_sense_data()
             info = str(sense_data[0]) #temperature
-            msg_out("I", "Temperature: " + info)
+            msg_out("I", "Temperature: " + info + " C")
             info = str(sense_data[1]) #Humidity          
-            msg_out("I", "Humidity: " + info)
+            msg_out("I", "Humidity: " + info + " %")
             info = str(sense_data[2]) #Pressure
-            msg_out("I", "Pressure: " + info+"\n")
+            msg_out("I", "Pressure: " + info+ " mb"+"\n")
         else:
             msg_out("W", "Sense Hat not detected")
         
