@@ -47,6 +47,7 @@ from picamera import PiCamera
 from threading import Thread
 from datetime import timedelta
 from requests import get
+import colorama
 import argparse
 import warnings
 import datetime
@@ -110,8 +111,8 @@ def msg_out(typ = "I", msg = "null"):
     msg_time = datetime.datetime.now().strftime("%I:%M:%S%p")
     
     if typ == "I": mtype = "[INFO - "
-    elif typ == "W": mtype = "[WARNING - "
-    elif typ == "A": mtype = "[ALARM - "
+    elif typ == "W": mtype = "[" + colorama.Fore.YELLOW  + "WARNING" + "  - "
+    elif typ == "A": mtype = "[" + colorama.Fore.RED + "ALARM"+  " - " 
     elif typ == "E": mtype = "[ERROR - "
     elif typ == "C": mtype = "[CMD - "
     else: mtype = "[UNKNOWN - "
@@ -264,6 +265,7 @@ LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S
 
 #initialize console
 if conf["echo"]:
+    colorama.init(autoreset=True)
     print("\n")
     print("**************************************")
     print("*          PI Surveillance           *")
