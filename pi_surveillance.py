@@ -111,8 +111,8 @@ def msg_out(typ = "I", msg = "null"):
     msg_time = datetime.datetime.now().strftime("%I:%M:%S%p")
     
     if typ == "I": mtype = "[INFO - "
-    elif typ == "W": mtype = "[" + colorama.Fore.YELLOW  + "WARNING" + "  - "
-    elif typ == "A": mtype = "[" + colorama.Fore.RED + "ALARM"+  " - " 
+    elif typ == "W": mtype = colorama.Fore.YELLOW+ "[WARNING - "
+    elif typ == "A": mtype = colorama.Fore.RED +  "[ALARM - " 
     elif typ == "E": mtype = "[ERROR - "
     elif typ == "C": mtype = "[CMD - "
     else: mtype = "[UNKNOWN - "
