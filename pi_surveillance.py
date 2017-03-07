@@ -268,9 +268,9 @@ if conf["echo"]:
     colorama.init(autoreset=True)
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance           *")
+    print(colorama.Style.BRIGHT + "*          PI Surveillance           *")
     print("*                                    *")
-    print("*           Version: 2.6             *")
+    print(colorama.Style.BRIGHT+ "*           Version: 2.6             *")
     print("**************************************")
     print("\n")
     print ("[INFO] Press [b] to check image brightness level")
@@ -422,7 +422,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("W", "Image is too dark...")
             if conf["keep_log"]: logger.warning("Image is too dark...")
         rawCapture.truncate(0)
-        msg_out("I", "System initiated...")
+        msg_out("I", colorama.Style.BRIGHT+"System initiated...")
         if conf["keep_log"]: logger.info("System initiated...")
         continue
         
@@ -678,7 +678,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         if conf["oweather"]:
             open_weather = get(oweather_call).json()
             msg_out("I", "************************")
-            info ="Current weather report @ " + open_weather["name"]
+            info = colorama.Style.BRIGHT + "Current weather report @ " + open_weather["name"]
             msg_out("I", info)
             info = "Temperature: " + str(open_weather["main"]["temp"]) + " C"
             msg_out("I", info)
