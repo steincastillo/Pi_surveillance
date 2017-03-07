@@ -4,7 +4,7 @@
 """
 pi_surveillance.py
 Date created: 08-Oct-2016
-Version: 2.5
+Version: 2.6
 Author: Stein Castillo
 Copyright 2016 Stein Castillo <stein_castillo@yahoo.com>  
 
@@ -46,6 +46,8 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
 from datetime import timedelta
+from requests import get
+import colorama
 import argparse
 import warnings
 import datetime
@@ -109,10 +111,10 @@ def msg_out(typ = "I", msg = "null"):
     msg_time = datetime.datetime.now().strftime("%I:%M:%S%p")
     
     if typ == "I": mtype = "[INFO - "
-    elif typ == "W": mtype = "[WARNING - "
-    elif typ == "A": mtype = "[ALARM - "
-    elif typ == "E": mtype = "[ERROR - "
-    elif typ == "C": mtype = "[CMD - "
+    elif typ == "W": mtype = colorama.Fore.YELLOW + "[WARNING - "
+    elif typ == "A": mtype = colorama.Fore.RED +  "[ALARM - " 
+    elif typ == "E": mtype = colorama.Fore.RED + "[ERROR - "
+    elif typ == "C": mtype = colorama.Fore.YELLOW + "[CMD - "
     else: mtype = "[UNKNOWN - "
         
     if conf["echo"]: print (mtype + msg_time + "] " + msg)
@@ -251,6 +253,9 @@ FROMADDR = conf["fromaddr"]  #email account
 SMTPPASS = conf["smtppass"]  #email password
 TOADDR = conf["toaddr"]      #email recipient
 
+if conf["oweather"]:
+    oweather_call = "http://api.openweathermap.org/data/2.5/weather?id=" + conf["oweather_city"] + "&units=metric&appid=" + conf[ "oweather_key"]
+
 #log file settings
 LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S")+".log"
 
@@ -260,17 +265,19 @@ LOGNAME = "Pi_surveillance_"+datetime.datetime.now().strftime("%d-%m-%Y_%H-%M-%S
 
 #initialize console
 if conf["echo"]:
+    colorama.init(autoreset=True)
     print("\n")
     print("**************************************")
-    print("*          PI Surveillance           *")
+    print(colorama.Style.BRIGHT + "*          PI Surveillance           *")
     print("*                                    *")
-    print("*           Version: 2.5             *")
+    print(colorama.Style.BRIGHT+ "*           Version: 2.6             *")
     print("**************************************")
     print("\n")
-    print ("[INFO] Press [q] to quit")
-    print ("[INFO] Press [c] to capture image") 
     print ("[INFO] Press [b] to check image brightness level")
+    print ("[INFO] Press [c] to capture image") 
+    print ("[INFO] Press [e] to display enviroment information")
     print ("[INFO] Press [h] for help") 
+    print ("[INFO] Press [q] to quit")
     print("\n")
     print("Surveillance settings:")
     print("**********************")
@@ -289,6 +296,7 @@ if conf["echo"]:
     print ("  * Echo: " + str(conf["echo"]))
     print ("  * Sense Hat: " + str(conf["sense_hat"]))
     print ("  * Sense alarm: " + str(conf["alarm"]))
+    print ("  * Open Weather: " + str(conf["oweather"]))
     print ("\n")
 
 #Initialize LOG FILE
@@ -414,7 +422,7 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("W", "Image is too dark...")
             if conf["keep_log"]: logger.warning("Image is too dark...")
         rawCapture.truncate(0)
-        msg_out("I", "System initiated...")
+        msg_out("I", colorama.Style.BRIGHT+"System initiated...")
         if conf["keep_log"]: logger.info("System initiated...")
         continue
         
@@ -666,6 +674,23 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("I", "Pressure: " + info+ " mb"+"\n")
         else:
             msg_out("W", "Sense Hat not detected")
+        #if required, obtain current weather from www.openweather.org
+        if conf["oweather"]:
+            open_weather = get(oweather_call).json()
+            msg_out("I", "************************")
+            info = colorama.Style.BRIGHT + "Current weather report @ " + open_weather["name"]
+            msg_out("I", info)
+            info = "Temperature: " + str(open_weather["main"]["temp"]) + " C"
+            msg_out("I", info)
+            open_weather = get(oweather_call).json()
+            info = "Humidity: " + str(open_weather["main"]["humidity"]) + " %"
+            msg_out("I", info)
+            open_weather = get(oweather_call).json()
+            info = "Pressure: " + str(open_weather["main"]["pressure"]) + " mb"
+            msg_out("I", info)
+            info = "Current weather: " + open_weather["weather"][0]["description"]
+            msg_out("I", info)
+            
         
     #if the "h" is pressed, display console help
     if key == ord("h"):
