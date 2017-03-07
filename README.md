@@ -2,7 +2,7 @@
 ##Raspberry Pi home surveillance system
 
 ###Overview
-**Pi Surveillance** is a function rich home surveillance system implemented on a raspberry pi. Main features inclue:  
+**Pi Surveillance** is a function rich home surveillance system implemented on a Raspberry Pi. Main features include:  
 * Permanent video monitoring  
 * Motion detection  
 * Enviroment sensing (with optional sense-hat)  
@@ -27,6 +27,9 @@ The available configuration elements are:
 `ghost video:` [true/false] - set to true if you want to see the motion detection video feed  
 `echo`: [true/false] - set to true if your raspberry is connected to a screen  
 `alarm`: [true/false] - display blinking blue/red lights on the sense hat display when motion is detected  
+`oweather`: [true/false] - set to true if you wish to obtain the weather report from www.openweather.org  
+`oweather_key`: [openweahter_key] - you can obtain this key for free at www.openweather.org   
+`oweather_city`: [openweahter_city_code] - City where you want to obtain the wheather report from  
 `sys_check_seconds`: [number] of seconds to wait to check if a remote comand has been sent via email typically: 600  
 `sense_hat`: [true/false] -  set to 'true' if sense-hat attached and want to get temperature/pressure/humidity readings  
 `camera_warmup_time`: [number] of seconds the camera needs to adjust focus, exposure, etc.  
@@ -69,7 +72,7 @@ To launch the surveillance system from the command line:
 While running pi_surveillance from a terminal, you can use use the following commands:  
 `b`: Display the brightness level of the current video feed   
 `c`: Capture current video feed to a still image  
-`e`: Display Sense Hat environment sensors information  
+`e`: Display Sense Hat environment sensors information and weather report  
 `h`: Display terminal commands help  
 `q`: Terminate the program  
 
@@ -77,6 +80,6 @@ While running pi_surveillance from a terminal, you can use use the following com
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
 
 ###Additional notes
-Current version is 2.5.  
+Current version is 2.6.  
 This version of the monitor has been tested with Pyhton 3  and raspberry Pi 3 only.  
 Please check license.txt for licensing terms  
