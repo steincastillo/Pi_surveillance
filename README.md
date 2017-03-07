@@ -9,7 +9,7 @@
 * Record monitor activity to a log file  
 * Send email messages containing motion alarms (with picture), system status, etc  
 * Ability to control the monitor remotely over email  
-* Access www.openweather.org for real time weather report  
+* Access[OpenWeatherMap] (http://openweathermap.org)  for real time weather report  
 * Code independent configuration  
 
 ###What you need
@@ -29,8 +29,8 @@ The available configuration elements are:
 `ghost video:` [true/false] - set to true if you want to see the motion detection video feed  
 `echo`: [true/false] - set to true if your raspberry is connected to a screen  
 `alarm`: [true/false] - display blinking blue/red lights on the sense hat display when motion is detected  
-`oweather`: [true/false] - set to true if you wish to obtain the weather report from www.openweather.org  
-`oweather_key`: [openweahter_key] - you can obtain this key for free at www.openweather.org   
+`oweather`: [true/false] - set to true if you wish to obtain the weather report from OpenWeatherMap  
+`oweather_key`: [openweahter_key] - you can obtain this key for free at [OpenWeatherMap] (http://openweathermap.org)  
 `oweather_city`: [openweahter_city_code] - City where you want to obtain the wheather report from  
 `sys_check_seconds`: [number] of seconds to wait to check if a remote comand has been sent via email typically: 600  
 `sense_hat`: [true/false] -  set to 'true' if sense-hat attached and want to get temperature/pressure/humidity readings  
@@ -50,7 +50,7 @@ The available configuration elements are:
 several version of the **default.json** file can be saved to acommodate different needs  
 
 ###Installation
-To install the Pi Surveillance monitor, simple copy the following files to the same directory:
+To install the Pi Surveillance monitor, simply copy the following files to the same directory:
 * pi_surveillance.py  
 * default.json  
 
@@ -89,5 +89,5 @@ This project is based on previous work done by **Adrian Rosebrock** of [pyimages
 ###Additional notes
 Current version is **2.6**.  
 This version of the monitor has been tested with Pyhton 3  and raspberry Pi 3 only.  
-To ensure proper execution make sure you launch the application from the command line (NOT IDLE)  
-Please check license.txt for licensing terms  
+To ensure proper execution launch the application from the terminal command line (NOT IDLE).  
+Please check license.txt for licensing terms.  
