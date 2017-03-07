@@ -9,6 +9,7 @@
 * Record monitor activity to a log file  
 * Send email messages containing motion alarms (with picture), system status, etc  
 * Ability to control the monitor remotely over email  
+* Access www.openweather.org for real time weather report  
 * Code independent configuration  
 
 ###What you need
@@ -17,6 +18,7 @@ In order to properly run the Pi_surveillance system you will need:
 * OpenCV properly configured   
 * Pi Camera  
 * Sense-hat (optional)  
+* Internet connection (optional)  
 
 ###DEFAULT.JSON file
 The .json configuration file controls the surveillance monitor behavior. Also, gives the user control over the monitoring parameters without the need of changing the code. 
@@ -46,6 +48,11 @@ The available configuration elements are:
 `window_title` [title] of the video feed window  
 
 several version of the **default.json** file can be saved to acommodate different needs  
+
+###Installation
+To install the Pi Surveillance monitor, simple copy the following files to the same directory:
+* pi_surveillance.py  
+* default.json  
 
 ###Remote control 
 **Pi_surveillance** can be remotely controled. You just need to set a Gmail account for the raspberry. Commands to the monitor are sent using the subject line of the email.  
@@ -80,6 +87,7 @@ While running pi_surveillance from a terminal, you can use use the following com
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
 
 ###Additional notes
-Current version is 2.6.  
+Current version is **2.6**.  
 This version of the monitor has been tested with Pyhton 3  and raspberry Pi 3 only.  
+To ensure proper execution make sure you launch the application from the command line (NOT IDLE)  
 Please check license.txt for licensing terms  
