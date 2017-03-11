@@ -77,9 +77,11 @@ To launch the surveillance system from the command line:
 
 ###Console commands
 While running pi_surveillance from a terminal, you can use use the following commands:  
+`a`: Set AWAY mode (activates email and log recording)  
 `b`: Display the brightness level of the current video feed   
 `c`: Capture current video feed to a still image  
 `e`: Display Sense Hat environment sensors information and weather report  
+`o`: Set HOME mode (disables email and log recording)  
 `h`: Display terminal commands help  
 `q`: Terminate the program  
 
