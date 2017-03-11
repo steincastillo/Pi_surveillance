@@ -298,7 +298,6 @@ if conf["echo"]:
     print ("  * Sense alarm: " + str(conf["alarm"]))
     print ("  * Open Weather: " + str(conf["oweather"]))
     print ("\n")
-    print (" Command>")
 
 #Initialize LOG FILE
 logger = None
@@ -643,6 +642,18 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
  
     key = cv.waitKey(1) & 0xFF
     
+    #if the "a" is pressed set AWAY mode
+    if key == ord("a"):
+        msg_out("C", "AWAY mode set")
+        if conf["keep_log"]: logger.warning("AWAy mode set")
+        if logger == None:
+            logger = logging.getLogger("Pi_surveillance")
+            log_setup(LOGNAME)
+            msg_out("I", "Log file created...")
+            logger.info("Log file created")
+        conf["send_email"] = True
+        conf["keep_log"] = True
+    
     #if the "c" is pressed, capture image
     if key == ord("c"):
         msg_out("C", "Capture image")
@@ -692,6 +703,14 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             info = "Current weather: " + open_weather["weather"][0]["description"]
             msg_out("I", info)
             
+    #if the "o" is pressed set HOME mode
+    if key == ord("o"):
+        msg_out("C", "HOME mode set")
+        if conf["keep_log"]: logger.warning("HOME mode set")
+        conf["send_email"] = False
+        conf["keep_log"] = False
+        conf["alarm"] = False
+    
     #if the "h" is pressed, display console help
     if key == ord("h"):
         print("\n")
@@ -700,10 +719,9 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
         print ("[INFO] Press [b] to dislay image brightness level") 
         print ("[INFO] Press [c] to capture image") 
         print ("[INFO] Press [e] to display enviroment sensors")
-        print ("[INFO] Press [h] activate HOME mode")
+        print ("[INFO] Press [o] activate HOME mode")
         print ("[INFO] Press [q] to quit")
         print("\n")
-        print (" Command>")
             
     #if the "q" key is pressed, break from the loop
     if key == ord("q"):
