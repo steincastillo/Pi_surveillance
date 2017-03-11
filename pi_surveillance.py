@@ -298,6 +298,7 @@ if conf["echo"]:
     print ("  * Sense alarm: " + str(conf["alarm"]))
     print ("  * Open Weather: " + str(conf["oweather"]))
     print ("\n")
+    print (" Command>")
 
 #Initialize LOG FILE
 logger = None
@@ -691,16 +692,18 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             info = "Current weather: " + open_weather["weather"][0]["description"]
             msg_out("I", info)
             
-        
     #if the "h" is pressed, display console help
     if key == ord("h"):
         print("\n")
         print ("Console commands:")
+        print ("[INFO] Press [a] activate AWAY mode")
         print ("[INFO] Press [b] to dislay image brightness level") 
         print ("[INFO] Press [c] to capture image") 
         print ("[INFO] Press [e] to display enviroment sensors")
+        print ("[INFO] Press [h] activate HOME mode")
         print ("[INFO] Press [q] to quit")
         print("\n")
+        print (" Command>")
             
     #if the "q" key is pressed, break from the loop
     if key == ord("q"):
