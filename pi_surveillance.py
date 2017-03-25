@@ -298,6 +298,8 @@ if conf["echo"]:
     print ("  * Sense alarm: " + str(conf["alarm"]))
     print ("  * Open Weather: " + str(conf["oweather"]))
     print ("\n")
+    print ("*** Press [h] for help")
+    print ("\n")
 
 #Initialize LOG FILE
 logger = None
