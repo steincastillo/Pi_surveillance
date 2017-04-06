@@ -1,7 +1,7 @@
 # Pi_surveillance
-##Raspberry Pi home surveillance system
+## Raspberry Pi home surveillance system
 
-###Overview
+### Overview
 **Pi Surveillance** is a function rich home surveillance system implemented on a Raspberry Pi. Main features include:  
 * Permanent video monitoring  
 * Motion detection  
@@ -12,7 +12,7 @@
 * Access[OpenWeatherMap] (http://openweathermap.org)  for real time weather report  
 * Code independent configuration  
 
-###What you need
+### What you need
 In order to properly run the Pi_surveillance system you will need:  
 * Raspberry Pi (2 or higher) running and updated version of raspbian (PIXEL)  
 * OpenCV properly configured   
@@ -20,7 +20,7 @@ In order to properly run the Pi_surveillance system you will need:
 * Sense-hat (optional)  
 * Internet connection (optional)  
 
-###DEFAULT.JSON file
+### DEFAULT.JSON file
 The .json configuration file controls the surveillance monitor behavior. Also, gives the user control over the monitoring parameters without the need of changing the code. 
 
 The available configuration elements are:    
@@ -49,12 +49,12 @@ The available configuration elements are:
 
 several version of the **default.json** file can be saved to acommodate different needs  
 
-###Installation
+### Installation
 To install the Pi Surveillance monitor, simply copy the following files to the same directory:
 * pi_surveillance.py  
 * default.json  
 
-###Remote control 
+### Remote control 
 **Pi_surveillance** can be remotely controled. You just need to set a Gmail account for the raspberry. Commands to the monitor are sent using the subject line of the email.  
 The available commands are:  
 * **send picture**: Take a picture and send it back  
@@ -69,13 +69,13 @@ The available commands are:
 * **home**: Deactivates the keep log and send mail  
 * **away**: Activates keep log and send mail  
 
-###Usage
+### Usage
 To launch the surveillance system from the command line:
 
-####python3 pi_surveillance.py --help
-####python3 pi_surveillance.py --conf default.json  
+#### python3 pi_surveillance.py --help
+#### python3 pi_surveillance.py --conf default.json  
 
-###Console commands
+### Console commands
 While running pi_surveillance from a terminal, you can use use the following commands:  
 `a`: Set AWAY mode (activates email and log recording)  
 `b`: Display the brightness level of the current video feed   
@@ -85,10 +85,10 @@ While running pi_surveillance from a terminal, you can use use the following com
 `h`: Display terminal commands help  
 `q`: Terminate the program  
 
-###Additional credits
+### Additional credits
 This project is based on previous work done by **Adrian Rosebrock** of [pyimagesearch] (http://www.pyimagesearch.com)
 
-###Additional notes
+### Additional notes
 Current version is **2.6**.  
 This version of the monitor has been tested with Pyhton 3  and raspberry Pi 3 only.  
 To ensure proper execution launch the application from the terminal command line (NOT IDLE).  
