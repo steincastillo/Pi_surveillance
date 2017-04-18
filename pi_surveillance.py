@@ -690,22 +690,25 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
             msg_out("W", "Sense Hat not detected")
         #if required, obtain current weather from www.openweather.org
         if conf["oweather"]:
-            open_weather = get(oweather_call).json()
-            msg_out("I", "************************")
-            info = colorama.Style.BRIGHT + "Current weather report @ " + open_weather["name"]
-            msg_out("I", info)
-            info = "Temperature: " + str(open_weather["main"]["temp"]) + " C"
-            msg_out("I", info)
-            open_weather = get(oweather_call).json()
-            info = "Humidity: " + str(open_weather["main"]["humidity"]) + " %"
-            msg_out("I", info)
-            open_weather = get(oweather_call).json()
-            info = "Pressure: " + str(open_weather["main"]["pressure"]) + " mb"
-            msg_out("I", info)
-            info = "Wind: Direction:" + str(open_weather["wind"]["deg"]) + " deg. Speed: " +  str(open_weather["wind"]["speed"]) + " km/h"
-            msg_out("I", info)
-            info = "Current weather: " + open_weather["weather"][0]["description"]
-            msg_out("I", info)
+            try:
+                open_weather = get(oweather_call).json()
+                msg_out("I", "************************")
+                info = colorama.Style.BRIGHT + "Current weather report @ " + open_weather["name"]
+                msg_out("I", info)
+                info = "Temperature: " + str(open_weather["main"]["temp"]) + " C"
+                msg_out("I", info)
+                open_weather = get(oweather_call).json()
+                info = "Humidity: " + str(open_weather["main"]["humidity"]) + " %"
+                msg_out("I", info)
+                open_weather = get(oweather_call).json()
+                info = "Pressure: " + str(open_weather["main"]["pressure"]) + " mb"
+                msg_out("I", info)
+                info = "Wind: Direction:" + str(open_weather["wind"]["deg"]) + " deg. Speed: " +  str(open_weather["wind"]["speed"]) + " km/h"
+                msg_out("I", info)
+                info = "Current weather: " + open_weather["weather"][0]["description"]
+                msg_out("I", info)
+            except:
+                msg_out("E", "Weather information not available")
             
     #if the "o" is pressed set HOME mode
     if key == ord("o"):
