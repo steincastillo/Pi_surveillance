@@ -703,8 +703,11 @@ for f in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True
                 open_weather = get(oweather_call).json()
                 info = "Pressure: " + str(open_weather["main"]["pressure"]) + " mb"
                 msg_out("I", info)
-                info = "Wind: Direction:" + str(open_weather["wind"]["deg"]) + " deg. Speed: " +  str(open_weather["wind"]["speed"]) + " km/h"
-                msg_out("I", info)
+                try:
+                    info = "Wind: Direction:" + str(open_weather["wind"]["deg"]) + " deg. Speed: " +  str(open_weather["wind"]["speed"]) + " km/h"
+                    msg_out("I", info)
+                except:
+                    msg_out("E", "Wind information not available")
                 info = "Current weather: " + open_weather["weather"][0]["description"]
                 msg_out("I", info)
             except:
